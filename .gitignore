@@ -1,2 +1,5 @@
 /target
 /Cargo.lock
+
+target
+src/android/java/settings.gradle

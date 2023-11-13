@@ -1,5 +1,12 @@
 {
     "rust-analyzer.linkedProjects": [
+        ".\\Cargo.toml",
+        ".\\examples\\Cargo.toml",
         ".\\Cargo.toml"
-    ]
+    ],
+    "rust-analyzer.cargo.target": "aarch64-linux-android",
+    "cSpell.words": [
+        "thiserror"
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

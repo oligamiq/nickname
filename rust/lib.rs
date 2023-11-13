@@ -1,19 +1,10 @@
 use std::{result, time::Duration};
-
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+#[cfg(target_os = "android")]
+mod android;
+#[cfg(target_os = "android")]
+pub use crate::android::init;
+#[cfg(target_os = "android")]
+pub use android::UserDeviceName;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
