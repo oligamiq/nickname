@@ -1,12 +1,20 @@
 {
     "rust-analyzer.linkedProjects": [
         ".\\Cargo.toml",
-        ".\\examples\\Cargo.toml",
-        ".\\Cargo.toml"
+        ".\\Cargo.toml",
+        ".\\examples\\android\\Cargo.toml",
+        ".\\examples\\pc\\Cargo.toml"
     ],
-    "rust-analyzer.cargo.target": "aarch64-linux-android",
+    // "rust-analyzer.cargo.target": "aarch64-linux-android",
+    "rust-analyzer.cargo.target": "x86_64-unknown-linux-gnu",
     "cSpell.words": [
-        "thiserror"
+        "COMPUTERNAME",
+        "gethostname",
+        "libc",
+        "sysinfoapi",
+        "thiserror",
+        "winapi",
+        "winbase"
     ],
     "java.configuration.updateBuildConfiguration": "interactive"
 }
