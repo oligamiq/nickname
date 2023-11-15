@@ -1,12 +1,9 @@
 use android_activity::AndroidApp;
-use jni::{objects::JObject, sys::JNIInvokeInterface_, JavaVM};
-use libc::c_void;
-use log::info;
 use ndk::trace;
 use nick_name::get_device_api_level;
 
 #[no_mangle]
-fn android_main(app: AndroidApp) {
+fn android_main(_app: AndroidApp) {
     android_logger::init_once(android_logger::Config::default());
 
     let _trace;
