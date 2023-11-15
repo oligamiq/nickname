@@ -10,7 +10,7 @@ adb logcat RustStdoutStderr:D '*:S'
 
 <!-- x run --device adb:16ee50bc -->
 
-cargo apk run --example get
+cargo apk run
 ```
 
 # install

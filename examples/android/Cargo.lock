@@ -208,7 +208,7 @@ dependencies = [
  "log",
  "ndk",
  "ndk-context",
- "user-device-name",
+ "nick-name",
 ]
 
 [[package]]
@@ -331,6 +331,19 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8c196769dd60fd4f363e11d948139556a344e79d451aeb2fa2fd040738ef7691"
 dependencies = [
  "jni-sys",
+]
+
+[[package]]
+name = "nick-name"
+version = "0.1.0"
+dependencies = [
+ "cocoa",
+ "jni",
+ "libc",
+ "ndk-context",
+ "objc",
+ "thiserror",
+ "winapi",
 ]
 
 [[package]]
@@ -493,17 +506,6 @@ name = "unicode-ident"
 version = "1.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3354b9ac3fae1ff6755cb6db53683adb661634f67557942dea4facebec0fee4b"
-
-[[package]]
-name = "user-device-name"
-version = "0.1.0"
-dependencies = [
- "cocoa",
- "jni",
- "libc",
- "objc",
- "thiserror",
-]
 
 [[package]]
 name = "walkdir"

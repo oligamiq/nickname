@@ -1,10 +1,27 @@
+cfg_if! {
+    if #[cfg(target_os = "android")] {
+        mod android;
+        pub use android::*;
+        extern "C" {
+            fn android_get_device_api_level() -> i32;
+        }
+        pub fn get_device_api_level() -> i32 {
+            unsafe { android_get_device_api_level() }
+        }
+    } else if #[cfg(any(unix, target_os = "redox"))] {
+        mod linux;
+        pub use linux::*;
+    } else if #[cfg(target_os = "windows")] {
+        mod windows;
+        pub use windows::*;
+    } else {
+        compile_error!("Unsupported target OS! Create an issue: https://github.com/svartalf/hostname/issues/new");
+    }
+}
+
 use std::{result, time::Duration};
-#[cfg(target_os = "android")]
-mod android;
-#[cfg(target_os = "android")]
-pub use crate::android::init;
-#[cfg(target_os = "android")]
-pub use android::UserDeviceName;
+
+pub type Result<T> = result::Result<T, Error>;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
@@ -24,4 +41,11 @@ pub enum Error {
     Other(Box<dyn std::error::Error + Send + Sync>),
 }
 
-pub type Result<T> = result::Result<T, Error>;
+impl Into<Error> for std::io::Error {
+    fn into(self) -> Error {
+        match self.kind() {
+            std::io::ErrorKind::PermissionDenied => Error::PermissionDenied,
+            _ => Error::Other(Box::new(self)),
+        }
+    }
+}
