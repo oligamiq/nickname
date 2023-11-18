@@ -17,7 +17,7 @@ jobs:
                   echo $ANDROID_HOME/emulator/emulator -list-avds
                   echo "Starting emulator"
                   $ANDROID_HOME/platform-tools/adb start-server
-                  nohup $ANDROID_HOME/emulator/emulator -avd xamarin_android_emulator -debug-init -no-snapshot > /dev/null 2>&1 &
+                  $ANDROID_HOME/emulator/emulator -avd xamarin_android_emulator -debug-init -no-snapshot
                   $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
                   $ANDROID_HOME/platform-tools/adb devices
                   echo "Emulator started"
@@ -44,3 +44,4 @@ jobs:
 # https://zenn.dev/takeyaqa/articles/github-actions-appium-android-emulator
 # https://stackoverflow.com/questions/3152681/android-emulator-5554-offline
 
+# nohup $ANDROID_HOME/emulator/emulator -avd xamarin_android_emulator -debug-init -no-snapshot > /dev/null 2>&1 &
