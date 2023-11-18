@@ -41,3 +41,5 @@ jobs:
                   name: screenshots
                   path: screenshots
 # https://zenn.dev/takeyaqa/articles/github-actions-appium-android-emulator
+# https://stackoverflow.com/questions/3152681/android-emulator-5554-offline
+
