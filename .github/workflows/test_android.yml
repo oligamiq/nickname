@@ -14,8 +14,6 @@ jobs:
                   echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-34;google_apis;x86_64'
                   echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n xamarin_android_emulator -k 'system-images;android-34;google_apis;x86_64' --force
                   echo $ANDROID_HOME/emulator/emulator -list-avds
-                  rm -Rf ~/.android
-                  adb -e reboot
                   echo "Starting emulator"
                   nohup $ANDROID_HOME/emulator/emulator -avd xamarin_android_emulator -no-snapshot > /dev/null 2>&1 &
                   $ANDROID_HOME/platform-tools/adb devices
