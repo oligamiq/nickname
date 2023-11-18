@@ -1,3 +1,5 @@
+use cfg_if::cfg_if;
+
 cfg_if! {
     if #[cfg(target_os = "android")] {
         mod android;
@@ -14,8 +16,12 @@ cfg_if! {
     } else if #[cfg(target_os = "windows")] {
         mod windows;
         pub use windows::*;
+    } else if #[cfg(target_os = "wasi")] {
+        mod wasi;
+        pub use wasi::*;
+        compile_error!("Unsupported target OS! wasi-libc is not supported yet. Create an issue: https://github.com/nziq53/nickname/issues/new");
     } else {
-        compile_error!("Unsupported target OS! Create an issue: https://github.com/svartalf/hostname/issues/new");
+        compile_error!("Unsupported target OS! Create an issue: https://github.com/nziq53/nickname/issues/new");
     }
 }
 
