@@ -19,7 +19,7 @@ cfg_if! {
     } else if #[cfg(target_os = "wasi")] {
         mod wasi;
         pub use wasi::*;
-        compile_error!("Unsupported target OS! wasi-libc is not supported yet. Create an issue: https://github.com/nziq53/nickname/issues/new");
+        compile_error!("Unsupported target OS! wasi-libc can not supported yet. Create an issue: https://github.com/nziq53/nickname/issues/new");
     } else {
         compile_error!("Unsupported target OS! Create an issue: https://github.com/nziq53/nickname/issues/new");
     }
