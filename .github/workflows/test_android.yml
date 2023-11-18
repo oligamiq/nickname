@@ -5,28 +5,30 @@ jobs:
         runs-on: macOS-latest
         steps:
             - uses: actions/checkout@v3
-            - name: Setup Gradle
-              uses: gradle/gradle-build-action@v2
-              with:
-                  gradle-version: current
-            - name: Run Android Emulator
-              run: |
-                  $ANDROID_HOME/tools/bin/sdkmanager --update
-                  echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-34;google_apis;x86_64'
-                  echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n xamarin_android_emulator -k 'system-images;android-34;google_apis;x86_64' --force
-                  echo $ANDROID_HOME/emulator/emulator -list-avds
-                  echo "Starting emulator"
-                  $ANDROID_HOME/platform-tools/adb start-server
-                  $ANDROID_HOME/emulator/emulator -avd xamarin_android_emulator -debug-init -no-snapshot
-                  $ANDROID_HOME/platform-tools/adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed | tr -d '\r') ]]; do sleep 1; done; input keyevent 82'
-                  $ANDROID_HOME/platform-tools/adb devices
-                  echo "Emulator started"
             - name: install target
               run: rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android
             - name: install rust android
               run: cargo install cargo-apk
             - name: catch log
               run: adb logcat RustStdoutStderr:D '*:S' > cargo-apk.log &
+            - name: AVD cache
+              uses: actions/cache@v3
+              id: avd-cache
+              with:
+                  path: |
+                      ~/.android/avd/*
+                      ~/.android/adb*
+                  key: avd-32
+            - name: create AVD and generate snapshot for caching
+              if: steps.avd-cache.outputs.cache-hit != 'true'
+              uses: reactivecircus/android-emulator-runner@v2
+              with:
+                  api-level: 32
+                  force-avd-creation: false
+                  emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+                  disable-animations: false
+                  script: echo "Generated AVD snapshot for caching."
+
             - name: Run tests
               run: cargo apk run
               working-directory: ./examples/android/
