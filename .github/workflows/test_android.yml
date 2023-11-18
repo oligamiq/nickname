@@ -9,6 +9,9 @@ jobs:
               uses: actions/setup-node@v1
               with:
                   node-version: 18.x
+            - name: Gradle update
+              id: gradle-update
+              uses: obfusk/gradle-update-action@v2
             - name: Run Android Emulator
               run: |
                   echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-34;google_apis;x86_64'
