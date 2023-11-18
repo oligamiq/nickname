@@ -1,0 +1,24 @@
+name: cache_cargo
+description: caching .cargo directory
+runs:
+  using: composite
+
+  steps:
+    # Fix timestamps
+    - name: restore timestamps
+      uses: chetan/git-restore-mtime-action@v2
+    - name: Cache cargo registry
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: ${{ runner.os }}-cargo-
+
+# https://zenn.dev/naokifujita/articles/c890954165c21f
+# https://zenn.dev/kt3k/articles/d557cc874961ab
+# https://github.com/marketplace/actions/git-restore-mtime

@@ -16,4 +16,6 @@ fn android_main(_app: AndroidApp) {
 
     let api_level = get_device_api_level();
     println!("{api_level}");
+
+    nick_name::finish().unwrap();
 }

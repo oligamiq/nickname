@@ -66,7 +66,24 @@ impl NickName {
         #[allow(non_camel_case_types)]
         type nickname_len_t = libc::c_int;
 
+        #[cfg(not(any(
+            target_os = "dragonfly",
+            target_os = "freebsd",
+            target_os = "ios",
+            target_os = "macos"
+        )))]
+        #[allow(clippy::absurd_extreme_comparisons)]
         if nickname.len() > nickname_len_t::MAX {
+            return Err(std::io::Error::new(std::io::ErrorKind::Other, "nickname too long").into());
+        }
+
+        #[cfg(any(
+            target_os = "dragonfly",
+            target_os = "freebsd",
+            target_os = "ios",
+            target_os = "macos"
+        ))]
+        if nickname.len() > nickname_len_t::MAX as usize {
             return Err(std::io::Error::new(std::io::ErrorKind::Other, "nickname too long").into());
         }
 

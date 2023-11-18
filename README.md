@@ -22,3 +22,7 @@ https://doc.rust-lang.org/nightly/rustc/platform-support.html
 
 ## build
 look README.md on example
+
+## next
+### android
+get nickname from bluetooth

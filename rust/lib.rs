@@ -4,12 +4,6 @@ cfg_if! {
     if #[cfg(target_os = "android")] {
         mod android;
         pub use android::*;
-        extern "C" {
-            fn android_get_device_api_level() -> i32;
-        }
-        pub fn get_device_api_level() -> i32 {
-            unsafe { android_get_device_api_level() }
-        }
     } else if #[cfg(any(unix, target_os = "redox"))] {
         mod linux;
         pub use linux::*;
@@ -47,11 +41,11 @@ pub enum Error {
     Other(Box<dyn std::error::Error + Send + Sync>),
 }
 
-impl Into<Error> for std::io::Error {
-    fn into(self) -> Error {
-        match self.kind() {
+impl From<std::io::Error> for Error {
+    fn from(val: std::io::Error) -> Self {
+        match val.kind() {
             std::io::ErrorKind::PermissionDenied => Error::PermissionDenied,
-            _ => Error::Other(Box::new(self)),
+            _ => Error::Other(Box::new(val)),
         }
     }
 }
