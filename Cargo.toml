@@ -1,7 +1,16 @@
 [package]
 name = "nick-name"
 version = "0.1.0"
+authors = ["oligami <nziq53@gmail.com>"]
+license = "MIT/Apache-2.0/BSD-3-Clause"
+repository = "https://github.com/nziq53/nickname"
+homepage = "https://github.com/nziq53/nickname"
 edition = "2021"
+description = """
+A Cross-Platform Rust user define device-name(nick-name) get set library.
+"""
+keywords = ["devicename", "nickname"]
+categories = ["hardware-support"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -30,5 +39,5 @@ winapi = { version = "0.3", features = [
 cocoa = "0.25"
 objc = "0.2"
 
-[target.'cfg(any(unix, target_os = "redox"))'.dependencies]
+[target.'cfg(any(unix, target_os = "redox", target_os = "wasi"))'.dependencies]
 libc = "0.2"
