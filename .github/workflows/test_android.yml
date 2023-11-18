@@ -28,21 +28,20 @@ jobs:
                   emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
                   disable-animations: false
                   script: echo "Generated AVD snapshot for caching."
-
-            - name: Run tests
-              run: cargo apk run
-              working-directory: ./examples/android/
-              continue-on-error: true
+            - name: run tests
+              uses: reactivecircus/android-emulator-runner@v2
+              with:
+                  api-level: 34
+                  force-avd-creation: false
+                  emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+                  disable-animations: true
+                  script: cargo apk run
+                  working-directory: ./examples/android/
             - name: Upload log on cargo-apk
               uses: actions/upload-artifact@v1
               with:
                   name: cargo-apk.log
                   path: cargo-apk.log
-            - name: Upload screenshots
-              uses: actions/upload-artifact@v1
-              with:
-                  name: screenshots
-                  path: screenshots
 # https://zenn.dev/takeyaqa/articles/github-actions-appium-android-emulator
 # https://stackoverflow.com/questions/3152681/android-emulator-5554-offline
 
