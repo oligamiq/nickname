@@ -1,0 +1,26 @@
+name: cache_cargo
+description: caching .cargo directory
+runs:
+  using: composite
+
+  steps:
+    - name: Install Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Restore mtime
+      run: python ./git-restore-mtime.py
+    - name: Cache cargo registry
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: ${{ runner.os }}-cargo-
+
+# https://zenn.dev/naokifujita/articles/c890954165c21f
+# https://zenn.dev/kt3k/articles/d557cc874961ab

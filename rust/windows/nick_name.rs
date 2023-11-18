@@ -99,6 +99,7 @@ impl NickName {
 
             // バッファサイズを定義
             let mut buffer = Vec::with_capacity(size as usize);
+            let _remaining = buffer.spare_capacity_mut();
             buffer.set_len(size as usize);
 
             // GetComputerNameExWを呼び出してコンピュータ名を取得
@@ -134,7 +135,7 @@ impl NickName {
             }
 
             // ホスト名取得
-            let mut buffer: [i8; MAX_HOSTNAME_LEN as usize] = std::mem::zeroed();
+            let mut buffer: [i8; MAX_HOSTNAME_LEN] = std::mem::zeroed();
             if winapi::um::winsock2::gethostname(buffer.as_mut_ptr(), buffer.len() as i32) != 0 {
                 winapi::um::winsock2::WSACleanup();
                 return Err(std::io::Error::last_os_error().into());
