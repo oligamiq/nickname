@@ -8,7 +8,7 @@ jobs:
             - name: Set up Node.js
               uses: actions/setup-node@v1
               with:
-                  node-version: lts/*
+                  node-version: 18.x
             - name: Run Android Emulator
               run: |
                   echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-34;google_apis;x86'
