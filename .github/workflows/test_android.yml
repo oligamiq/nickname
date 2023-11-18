@@ -12,8 +12,8 @@ jobs:
             - name: Run Android Emulator
               run: |
                   $ANDROID_HOME/tools/bin/sdkmanager --update
-                  echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-32;google_apis;x86_64'
-                  echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n xamarin_android_emulator -k 'system-images;android-32;google_apis;x86_64' --force
+                  echo "y" | $ANDROID_HOME/tools/bin/sdkmanager --install 'system-images;android-34;google_apis;x86_64'
+                  echo "no" | $ANDROID_HOME/tools/bin/avdmanager create avd -n xamarin_android_emulator -k 'system-images;android-34;google_apis;x86_64' --force
                   echo $ANDROID_HOME/emulator/emulator -list-avds
                   echo "Starting emulator"
                   $ANDROID_HOME/platform-tools/adb start-server
