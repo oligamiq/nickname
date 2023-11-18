@@ -5,15 +5,13 @@ runs:
 
   steps:
     - name: Install Python
-      shell: bash
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
     - name: Restore mtime
-      shell: bash
       run: python ./git-restore-mtime.py
-    - name: Cache cargo registry
       shell: bash
+    - name: Cache cargo registry
       uses: actions/cache@v2
       with:
         path: |
