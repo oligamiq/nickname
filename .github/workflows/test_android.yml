@@ -41,7 +41,7 @@ jobs:
                       adb root
                       cargo apk run
                   working-directory: ./examples/android/
-                  continue-on-error: true
+              continue-on-error: true
             - name: create instrumentation coverage on google_apis for android 33
               uses: ReactiveCircus/android-emulator-runner@v2
               env:
@@ -61,7 +61,7 @@ jobs:
                       adb root
                       cargo apk run
                   working-directory: ./examples/android/
-                  continue-on-error: true
+              continue-on-error: true
             - name: Upload log on cargo-apk
               uses: actions/upload-artifact@v1
               with:
