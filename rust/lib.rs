@@ -4,12 +4,6 @@ cfg_if! {
     if #[cfg(target_os = "android")] {
         mod android;
         pub use android::*;
-        extern "C" {
-            fn android_get_device_api_level() -> i32;
-        }
-        pub fn get_device_api_level() -> i32 {
-            unsafe { android_get_device_api_level() }
-        }
     } else if #[cfg(any(unix, target_os = "redox"))] {
         mod linux;
         pub use linux::*;
