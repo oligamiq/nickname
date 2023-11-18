@@ -4,7 +4,8 @@ runs:
   using: composite
 
   steps:
-    - name: Restore mtime
+    # Fix timestamps
+    - name: restore timestamps
       uses: chetan/git-restore-mtime-action@v2
     - name: Cache cargo registry
       uses: actions/cache@v2
