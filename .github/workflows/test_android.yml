@@ -23,14 +23,6 @@ jobs:
               run: cargo install cargo-apk
             - name: catch log
               run: adb logcat RustStdoutStderr:D '*:S' > cargo-apk.log &
-            - name: AVD cache
-              uses: actions/cache@v3
-              id: avd-cache
-              with:
-                  path: |
-                      ~/.android/avd/*
-                      ~/.android/adb*
-                  key: avd-33
             - name: create instrumentation coverage
               uses: ReactiveCircus/android-emulator-runner@v2
               env:
