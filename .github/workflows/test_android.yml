@@ -18,6 +18,8 @@ jobs:
                   nohup $ANDROID_HOME/emulator/emulator -avd xamarin_android_emulator -no-snapshot > /dev/null 2>&1 &
                   $ANDROID_HOME/platform-tools/adb devices
                   echo "Emulator started"
+            - name: install target
+              run: rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android
             - name: install rust android
               run: cargo install cargo-apk
             - name: catch log
