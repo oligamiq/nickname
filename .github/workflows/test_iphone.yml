@@ -14,10 +14,10 @@ jobs:
             - name: install rust iphone
               run: cargo install cargo-bundle
             - name: pre build
-              run: cargo build --target aarch64-apple-ios
+              run: cargo build --target x86_64-apple-ios
               working-directory: ./examples/iphone/
             - name: build
-              run: CARGO_BUNDLE_SKIP_BUILD=1 cargo bundle --format ios --target aarch64-apple-ios
+              run: CARGO_BUNDLE_SKIP_BUILD=1 cargo bundle --format ios --target x86_64-apple-ios
               working-directory: ./examples/iphone/
               continue-on-error: true
             - name: install tree
@@ -31,6 +31,6 @@ jobs:
                   model: "iPhone 8"
             - name: drive
               run: |
-                  xcrun simctl install booted target/aarch64-apple-ios/debug/bundle/ios/nickname-ios-test-app.app
+                  xcrun simctl install booted target/x86_64-apple-ios/debug/bundle/ios/nickname-ios-test-app.app
                   xcrun simctl launch --console booted com.oligami.nickname-ios-test
               working-directory: ./examples/iphone/
