@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 cargo apk build
 
 nohup cargo apk run > /dev/null 2>&1 &
