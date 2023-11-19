@@ -214,8 +214,7 @@ impl NickName {
                     JValue::Object(&content_resolver),
                     JValue::Object(&device_name),
                 ],
-            )
-            .expect("Failed to call getString method")
+            )?
             .l()?
             .into();
 

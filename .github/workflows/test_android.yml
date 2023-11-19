@@ -65,8 +65,8 @@ jobs:
             - name: Upload log on cargo-apk
               uses: actions/upload-artifact@v1
               with:
-                  name: cargo-apk-${{ matrix.api-level == 33 }}.log
-                  path: cargo-apk-${{ matrix.api-level == 33 }}.log
+                  name: cargo-apk-${{ matrix.api-level }}.log
+                  path: cargo-apk-${{ matrix.api-level }}.log
 # https://zenn.dev/takeyaqa/articles/github-actions-appium-android-emulator
 # https://stackoverflow.com/questions/3152681/android-emulator-5554-offline
 
