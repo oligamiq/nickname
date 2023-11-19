@@ -11,7 +11,7 @@ jobs:
             - name: install rust iphone
               run: cargo install cargo-bundle
             - name: build
-              run: cargo bundle --target aarch64-apple-ios
+              run: cargo bundle --target x86_64-apple-ios
               working-directory: ./examples/iphone/
             - name: start simulator
               uses: futureware-tech/simulator-action@v3
