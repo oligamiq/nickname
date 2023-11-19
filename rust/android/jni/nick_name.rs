@@ -60,7 +60,7 @@ impl NickName {
     }
 
     pub fn get(&self) -> crate::Result<String> {
-        if 25 > crate::get_device_api_level() {
+        if 25 > crate::get_device_api_level()? {
             return Err(crate::Error::Other(Box::new(std::io::Error::new(
                 std::io::ErrorKind::Other,
                 "API level 25 or higher is required",

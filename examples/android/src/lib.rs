@@ -3,7 +3,7 @@ use ndk::trace;
 use nick_name::get_device_api_level;
 
 #[no_mangle]
-fn android_main(_app: AndroidApp) {
+fn android_main(app: AndroidApp) {
     android_logger::init_once(android_logger::Config::default());
 
     let _trace;
@@ -11,11 +11,16 @@ fn android_main(_app: AndroidApp) {
         _trace = trace::Section::new("ndk-rs example main").unwrap();
     }
 
-    let device_name = nick_name::NickName::new().unwrap().get();
-    println!("{:?}", device_name);
+    println!("start");
 
-    let api_level = get_device_api_level();
+    let api_level = get_device_api_level().unwrap();
     println!("{api_level}");
 
+    if let Ok(device_name) = nick_name::NickName::new() {
+        println!("{:?}", device_name.get());
+    };
+
     nick_name::finish().unwrap();
+
+    println!("♰finish♰");
 }
