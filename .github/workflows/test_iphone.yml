@@ -11,6 +11,9 @@ jobs:
             - name: install rust iphone
               run: cargo install cargo-bundle
             - name: pre-build
+              run: cargo build
+              working-directory: ./examples/iphone/
+            - name: pre-build
               run: cargo build --target x86_64-apple-ios
               working-directory: ./examples/iphone/
             - name: build
