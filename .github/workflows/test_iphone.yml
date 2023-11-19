@@ -17,6 +17,8 @@ jobs:
               run: cargo bundle --format ios --target x86_64-apple-ios
               working-directory: ./examples/iphone/
               continue-on-error: true
+            - name: install tree
+              run: brew install tree
             - name: tree
               run: tree target
               working-directory: ./examples/iphone/
