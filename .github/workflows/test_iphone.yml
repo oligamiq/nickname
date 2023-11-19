@@ -17,12 +17,13 @@ jobs:
                   profile: default
                   toolchain: stable
                   target: x86_64-apple-ios
-            - name: Install LLVM and Clang
-              uses: KyleMayes/install-llvm-action@v1.7.0
+                  override: true
+            # - name: install rust iphone
+            #   run: cargo install cargo-bundle --git https://github.com/burtonageo/cargo-bundle.git
+            - name: Install cargo-dinghy
+              uses: baptiste0928/cargo-install@v2
               with:
-                  version: "13.0"
-            - name: install rust iphone
-              run: cargo install cargo-bundle --git https://github.com/burtonageo/cargo-bundle.git
+                  crate: cargo-dinghy
             - name: pre build
               run: cargo build --target x86_64-apple-ios
               working-directory: ./examples/iphone/
@@ -39,9 +40,14 @@ jobs:
               uses: futureware-tech/simulator-action@v3
               with:
                   model: "iPhone 8"
-            - name: drive
+            # - name: drive
+            #   run: |
+            #       xcrun simctl install booted target/x86_64-apple-ios/debug/bundle/ios/nickname-ios-test-app.app
+            #       xcrun simctl launch --console booted com.oligami.nickname-ios-test
+            #   working-directory: ./examples/iphone/
+
+            - name: Dinghy test
               run: |
-                  xcrun simctl install booted target/x86_64-apple-ios/debug/bundle/ios/nickname-ios-test-app.app
-                  xcrun simctl launch --console booted com.oligami.nickname-ios-test
-              working-directory: ./examples/iphone/
+                  cargo dinghy --platform auto-ios-x86_64 test
+
 # https://github.com/simlay/uikit-sys/blob/master/.github/workflows/rust.yml
