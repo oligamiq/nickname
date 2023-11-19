@@ -1,5 +1,6 @@
 #!/bin/bash
 
+cargo apk build
 nohup cargo apk run > /dev/null 2>&1 &
 adb logcat RustStdoutStderr:D '*:S' | while IFS= read -r line; do
     echo "$line"
