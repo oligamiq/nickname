@@ -22,7 +22,7 @@ jobs:
             - name: install rust android
               run: cargo install cargo-apk
             - name: catch log
-              run: adb logcat RustStdoutStderr:D '*:S' > cargo-apk.log &
+              run: adb logcat RustStdoutStderr:D '*:S' > cargo-apk-${{ matrix.api-level }}.log &
             - name: create instrumentation coverage
               uses: ReactiveCircus/android-emulator-runner@v2
               env:
@@ -65,8 +65,8 @@ jobs:
             - name: Upload log on cargo-apk
               uses: actions/upload-artifact@v1
               with:
-                  name: cargo-apk.log
-                  path: cargo-apk.log
+                  name: cargo-apk-${{ matrix.api-level == 33 }}.log
+                  path: cargo-apk-${{ matrix.api-level == 33 }}.log
 # https://zenn.dev/takeyaqa/articles/github-actions-appium-android-emulator
 # https://stackoverflow.com/questions/3152681/android-emulator-5554-offline
 
