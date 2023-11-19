@@ -13,7 +13,6 @@ jobs:
             - name: build
               run: cargo bundle --format ios --target x86_64-apple-ios
               working-directory: ./examples/iphone/
-              continue-on-error: true
             - name: start simulator
               uses: futureware-tech/simulator-action@v3
               with:
