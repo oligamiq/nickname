@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cargo apk run
+cargo apk run &
 adb logcat RustStdoutStderr:D '*:S' | while IFS= read -r line; do
     echo "$line"
     if [[ "$line" == *"__finish__"* ]]; then
