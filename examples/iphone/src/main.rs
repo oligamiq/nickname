@@ -5,7 +5,8 @@ use cacao::uikit::{
     WindowSceneDelegate,
 };
 
-use cacao::layout::LayoutConstraint;
+use cacao::color::Color;
+use cacao::layout::{Layout, LayoutConstraint};
 use cacao::view::{View, ViewController, ViewDelegate};
 
 #[derive(Default)]
@@ -20,20 +21,57 @@ impl AppDelegate for TestApp {
         SceneConfig::new("Default Configuration", session.role())
     }
 }
-
-pub struct RootView {}
+pub struct RootView {
+    pub green: View,
+    pub blue: View,
+}
 
 impl Default for RootView {
     fn default() -> Self {
-        RootView {}
+        RootView {
+            green: View::new(),
+            blue: View::new(),
+        }
     }
 }
 
 impl ViewDelegate for RootView {
     const NAME: &'static str = "RootView";
 
-    fn did_load(&mut self, _view: View) {
-        LayoutConstraint::activate(&[]);
+    fn did_load(&mut self, view: View) {
+        self.green.set_background_color(Color::SystemGreen);
+        view.add_subview(&self.green);
+
+        self.blue.set_background_color(Color::SystemBlue);
+        view.add_subview(&self.blue);
+
+        LayoutConstraint::activate(&[
+            self.green
+                .leading
+                .constraint_equal_to(&view.leading)
+                .offset(16.),
+            self.green
+                .trailing
+                .constraint_equal_to(&view.trailing)
+                .offset(-16.),
+            self.green.height.constraint_equal_to_constant(120.),
+            self.blue
+                .top
+                .constraint_equal_to(&self.green.bottom)
+                .offset(16.),
+            self.blue
+                .leading
+                .constraint_equal_to(&view.leading)
+                .offset(16.),
+            self.blue
+                .trailing
+                .constraint_equal_to(&view.trailing)
+                .offset(-16.),
+            self.blue
+                .bottom
+                .constraint_equal_to(&view.bottom)
+                .offset(-16.),
+        ]);
     }
 }
 
@@ -44,7 +82,7 @@ pub struct WindowScene {
 }
 
 impl WindowSceneDelegate for WindowScene {
-    fn will_connect(&self, scene: Scene, _session: SceneSession, _options: SceneConnectionOptions) {
+    fn will_connect(&self, scene: Scene, session: SceneSession, options: SceneConnectionOptions) {
         let bounds = scene.get_bounds();
         let mut window = Window::new(bounds);
         window.set_window_scene(scene);
