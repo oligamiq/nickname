@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cargo apk run &
+nohup cargo apk run > /dev/null 2>&1 &
 adb logcat RustStdoutStderr:D '*:S' | while IFS= read -r line; do
     echo "$line"
     if [[ "$line" == *"__finish__"* ]]; then
@@ -16,3 +16,4 @@ adb logcat RustStdoutStderr:D '*:S' | while IFS= read -r line; do
         break
     fi
 done
+echo "process end"
