@@ -1,0 +1,24 @@
+on: [push, pull_request]
+
+jobs:
+    test:
+        name: test
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: install target
+              run: rustup target add aarch64-apple-ios x86_64-apple-ios aarch64-apple-ios-sim
+            - name: install rust iphone
+              run: cargo install cargo-bundle
+            - name: build
+              run: cargo bundle --target aarch64-apple-ios
+              working-directory: ./examples/iphone/
+            - name: start simulator
+              uses: futureware-tech/simulator-action@v3
+              with:
+                  model: "iPhone 8"
+            - name: drive
+              run: |
+                  xcrun simctl install booted target/x86_64-apple-ios/debug/bundle/ios/nickname-ios-test-app.app
+                  xcrun simctl launch --console booted com.oligami.nickname-ios-test
+              working-directory: ./examples/iphone/

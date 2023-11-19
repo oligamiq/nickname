@@ -12,8 +12,8 @@ cacao = { version = "0.3", features = [
     "autolayout",
 ], default-features = false }
 
-[package.metadata.bundle.example.ios]
-name = "ios-app"
+[package.metadata.bundle.example.nickname-ios-test-app]
+name = "nickname-ios-test-app"
 identifier = "com.oligami.nickname-ios-test"
 category = "Developer Tool"
 short_description = "An example iOS app."
