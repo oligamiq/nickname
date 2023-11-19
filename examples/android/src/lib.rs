@@ -11,8 +11,8 @@ fn android_main(_app: AndroidApp) {
         _trace = trace::Section::new("ndk-rs example main").unwrap();
     }
 
-    let device_name = nick_name::NickName::new().unwrap().get().unwrap();
-    println!("{device_name}");
+    let device_name = nick_name::NickName::new().unwrap().get();
+    println!("{:?}", device_name);
 
     let api_level = get_device_api_level();
     println!("{api_level}");
