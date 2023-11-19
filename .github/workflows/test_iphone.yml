@@ -17,8 +17,8 @@ jobs:
               run: cargo bundle --format ios --target x86_64-apple-ios
               working-directory: ./examples/iphone/
               continue-on-error: true
-            - name: ls
-              run: ls -la target/x86_64-apple-ios/debug/bundle/ios/
+            - name: tree
+              run: tree target
               working-directory: ./examples/iphone/
             - name: start simulator
               uses: futureware-tech/simulator-action@v3
