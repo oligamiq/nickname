@@ -13,8 +13,11 @@ jobs:
               run: rustup target add aarch64-apple-ios x86_64-apple-ios aarch64-apple-ios-sim
             - name: install rust iphone
               run: cargo install cargo-bundle
+            - name: pre build
+              run: cargo build --target aarch64-apple-ios
+              working-directory: ./examples/iphone/
             - name: build
-              run: cargo bundle --format ios --target aarch64-apple-ios --release
+              run: CARGO_BUNDLE_SKIP_BUILD=1 cargo bundle --format ios --target aarch64-apple-ios
               working-directory: ./examples/iphone/
               continue-on-error: true
             - name: install tree
