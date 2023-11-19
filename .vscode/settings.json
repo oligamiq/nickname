@@ -1,19 +1,22 @@
 {
     "rust-analyzer.linkedProjects": [
         ".\\Cargo.toml",
-        ".\\Cargo.toml",
         ".\\examples\\android\\Cargo.toml",
         ".\\examples\\pc\\Cargo.toml",
+        ".\\examples\\iphone\\Cargo.toml"
     ],
-    "rust-analyzer.cargo.target": "aarch64-linux-android",
+    // "rust-analyzer.cargo.target": "aarch64-linux-android",
+    "rust-analyzer.cargo.target": "x86_64-apple-ios",
     // "rust-analyzer.cargo.target": "x86_64-unknown-linux-gnu",
     // "rust-analyzer.cargo.target": "wasm32-wasi",
     "cSpell.words": [
         "COMPUTERNAME",
         "gethostname",
         "libc",
+        "objc",
         "sysinfoapi",
         "thiserror",
+        "wasi",
         "winapi",
         "winbase"
     ],

@@ -1,0 +1,20 @@
+[package]
+name = "iphone"
+version = "0.1.0"
+edition = "2021"
+description = "A simple iPhone app"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+cacao = { version = "0.3", features = [
+    "uikit",
+    "autolayout",
+], default-features = false }
+
+[package.metadata.bundle.example.ios]
+name = "ios-app"
+identifier = "com.oligami.nickname-ios-test"
+category = "Developer Tool"
+short_description = "An example iOS app."
+long_description = "An example iOS app."

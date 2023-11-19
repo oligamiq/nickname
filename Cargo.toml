@@ -36,8 +36,7 @@ winapi = { version = "0.3", features = [
 ] }
 
 [target.'cfg(target_os = "ios")'.dependencies]
-cocoa = "0.25"
-objc = "0.2"
+objc = { version = "0.4.1", package = "objc2" }
 
 [target.'cfg(any(unix, target_os = "redox", target_os = "wasi"))'.dependencies]
 libc = "0.2"
