@@ -26,3 +26,11 @@ look README.md on example
 ## next
 ### android
 get nickname from bluetooth
+
+## extension function
+### android
+- finish
+call finishAndRemoveTask()
+- get_device_api_level
+get api_level
+call VERSION.SDK_INT
