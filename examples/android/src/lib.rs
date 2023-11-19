@@ -22,5 +22,5 @@ fn android_main(_app: AndroidApp) {
 
     nick_name::finish().unwrap();
 
-    eprintln!("♰finish♰");
+    eprintln!("__finish__");
 }
