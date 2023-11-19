@@ -11,7 +11,6 @@ adb logcat RustStdoutStderr:D '*:S' | while IFS= read -r line; do
     if [[ "$line" == *"__finish__"* ]]; then
         echo "String '__finish__' found. Killing the process."
         kill $PID
-        break
+        exit 0
     fi
 done
-echo "process end"
