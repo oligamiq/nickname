@@ -83,5 +83,31 @@ jobs:
               if: matrix.release.name == 'debug'
               run: cargo test --all -- --nocapture
             - uses: ./.github/actions/rm_cache_cargo
+
+    run:
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+                release:
+                    - { name: release }
+                    - { name: debug }
+                version: [1.68.0, stable, beta, nightly]
+        runs-on: ${{ matrix.os }}
+        needs: build_cache
+        steps:
+            - uses: actions/checkout@v3
+            - uses: ./.github/actions/install_rust_by_version
+            - uses: ./.github/actions/cache_cargo
+            - name: run release
+              if: matrix.release.name == 'release'
+              run: cargo run --release > ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
+            - name: run debug
+              if: matrix.release.name == 'debug'
+              run: cargo run --all > ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
+            - uses: ./.github/actions/rm_cache_cargo
+            - name: Upload log on run
+              uses: actions/upload-artifact@v1
+              with:
+                  name: ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
 # https://zenn.dev/naokifujita/articles/c890954165c21f
 # https://github.com/actix/actix-web/blob/master/.github/workflows/ci.yml
