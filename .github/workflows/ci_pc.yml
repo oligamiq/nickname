@@ -117,7 +117,7 @@ jobs:
             - name: Upload log on run
               uses: actions/upload-artifact@v3
               with:
-                  name: artifact
+                  name: run-log
                   path: ./examples/pc/${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
             - uses: ./.github/actions/rm_cache_cargo
 
@@ -128,7 +128,7 @@ jobs:
             - name: Download artifacts on run
               uses: actions/download-artifact@v3
               with:
-                  name: artifact
+                  name: run-log
                   path: artifacts
             - name: Concatenate logs
               run: |
@@ -149,7 +149,7 @@ jobs:
             - name: Upload concatenated log
               uses: actions/upload-artifact@v3
               with:
-                  name: all-logs
+                  name: run-log
                   path: all-logs.txt
 # https://zenn.dev/naokifujita/articles/c890954165c21f
 # https://github.com/actix/actix-web/blob/master/.github/workflows/ci.yml
