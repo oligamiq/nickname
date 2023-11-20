@@ -202,8 +202,7 @@ impl NickName {
 
         let device_name = jni_env
             .get_static_field(&setting_global, "DEVICE_NAME", "Ljava/lang/String;")?
-            .l()?
-            .into();
+            .l()?;
 
         let device_name = jni_env
             .call_static_method(

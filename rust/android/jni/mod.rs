@@ -36,12 +36,12 @@ pub fn global_jvm() -> &'static JavaVM {
             }
         }
     };
-    return unsafe {
+    unsafe {
         match JAVA_VM {
             Some(ref v) => v,
             None => panic!("JVM has not been initialized. Please initialize it with init()."),
         }
-    };
+    }
 }
 
 // .expect("JVM has not been initialized. Please initialize it with init().")
@@ -62,24 +62,21 @@ pub fn global_ctx() -> &'static Context {
             }
         }
     };
-    return unsafe {
+    unsafe {
         match CONTEXT {
             Some(ref v) => v,
             None => panic!("JVM has not been initialized. Please initialize it with init()."),
         }
-    };
+    }
 }
 
 impl Drop for NickName {
     fn drop(&mut self) {
         unsafe {
-            match JNI_ENV {
-                Some(ref _v) => {
-                    JNI_ENV = None;
-                    JAVA_VM = None;
-                    CONTEXT = None;
-                }
-                None => {}
+            if let Some(ref _v) = JNI_ENV {
+                JNI_ENV = None;
+                JAVA_VM = None;
+                CONTEXT = None;
             }
         }
     }
