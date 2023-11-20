@@ -1,4 +1,6 @@
 name: install_rust_by_version
+description: install rust by version
+runs:
   using: composite
 
   steps:
