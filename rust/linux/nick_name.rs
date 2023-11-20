@@ -52,7 +52,7 @@ impl NickName {
             target_os = "dragonfly",
             target_os = "freebsd",
             target_os = "ios",
-            target_os = "macos"
+            target_os = "macos",
             target_os = "solarish",
             target_os = "illumos",
         )))]
@@ -74,7 +74,9 @@ impl NickName {
             target_os = "dragonfly",
             target_os = "freebsd",
             target_os = "ios",
-            target_os = "macos"
+            target_os = "macos",
+            target_os = "solarish",
+            target_os = "illumos",
         )))]
         #[allow(clippy::absurd_extreme_comparisons)]
         if nickname.len() > nickname_len_t::MAX {
@@ -85,7 +87,9 @@ impl NickName {
             target_os = "dragonfly",
             target_os = "freebsd",
             target_os = "ios",
-            target_os = "macos"
+            target_os = "macos",
+            target_os = "solarish",
+            target_os = "illumos",
         ))]
         if nickname.len() > nickname_len_t::MAX as usize {
             return Err(std::io::Error::new(std::io::ErrorKind::Other, "nickname too long").into());
