@@ -37,6 +37,6 @@ call VERSION.SDK_INT
 
 # github actions test on mobile
 ## android
-api-level 24: `error: "API level 25 or higher is required"`
-api-level 30: `Android SDK built for x86_64`
-api-level 33: `sdk_gphone_x86_64`
+- api-level 24: `error: "API level 25 or higher is required"`
+- api-level 30: `Android SDK built for x86_64`
+- api-level 33: `sdk_gphone_x86_64`

@@ -1,0 +1,213 @@
+on: [push, pull_request]
+
+jobs:
+    build_cache_pc_tier1:
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+                version: [1.68.0, stable, beta, nightly]
+                prefix: [pc_test_target_tier1]
+        runs-on: ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@v3
+            - uses: ./.github/actions/install_rust_by_version
+            - uses: ./.github/actions/cache_cargo
+            - name: build
+              run: |
+                  cargo build
+                  cargo build --release
+            - name: build linux
+              if: ${{ matrix.os }} == 'ubuntu-latest'
+              run: |
+                  target=("aarch64-unknown-linux-gnu" "i686-unknown-linux-gnu" "x86_64-unknown-linux-gnu")
+                  for v in "${target[@]}"; do
+                    cargo build --target ${v}
+                    cargo build --target ${v} --release
+                  done
+            - name: build macos
+              if: ${{ matrix.os }} == 'macos-latest'
+              run: |
+                  target=("x86_64-apple-darwin")
+                  for v in "${target[@]}"; do
+                    cargo build --target ${v}
+                    cargo build --target ${v} --release
+                  done
+            - name: build windows
+              if: ${{ matrix.os }} == 'windows-latest'
+              run: |
+                  target=("i686-pc-windows-gnu" "i686-pc-windows-msvc" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc")
+                  for v in "${target[@]}"; do
+                    cargo build --target ${v}
+                    cargo build --target ${v} --release
+                  done
+            - uses: ./.github/actions/rm_cache_cargo
+
+    fmt_pc:
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+                version: [1.68.0, stable, beta, nightly]
+                prefix: [pc_test_target_tier1]
+        runs-on: ${{ matrix.os }}
+        needs: build_cache_pc_tier1
+        steps:
+            - uses: actions/checkout@v3
+            - run: rustup component add rustfmt
+            - uses: ./.github/actions/install_rust_by_version
+            - uses: ./.github/actions/cache_cargo
+            - name: install fmt
+              run: rustup component add rustfmt
+            - name: fmt
+              run: cargo fmt --all -- --check
+            - uses: ./.github/actions/rm_cache_cargo
+
+    clippy_pc_tier1:
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+                version: [1.68.0, stable, beta, nightly]
+                prefix: [pc_test]
+        runs-on: ${{ matrix.os }}
+        env:
+            RUSTC_FORCE_INCREMENTAL: 1
+        needs: build_cache_pc_tier1
+        steps:
+            - uses: actions/checkout@v3
+            - run: rustup component add clippy
+            - uses: ./.github/actions/install_rust_by_version
+            - uses: ./.github/actions/cache_cargo
+            - name: install clippy
+              run: rustup component add clippy-preview
+            - name: clippy
+              run: |
+                  cargo clippy --all-targets --all-features -- -D warnings
+            - name: clippy linux
+              if: ${{ matrix.os }} == 'ubuntu-latest'
+              run: |
+                  target=("aarch64-unknown-linux-gnu" "i686-unknown-linux-gnu" "x86_64-unknown-linux-gnu")
+                  for v in "${target[@]}"; do
+                    cargo clippy --all-targets --all-features -- -D warnings --target ${v}
+                  done
+            - name: clippy macos
+              if: ${{ matrix.os }} == 'macos-latest'
+              run: |
+                  target=("x86_64-apple-darwin")
+                  for v in "${target[@]}"; do
+                    cargo clippy --all-targets --all-features -- -D warnings --target ${v}
+                  done
+            - name: clippy windows
+              if: ${{ matrix.os }} == 'windows-latest'
+              run: |
+                  target=("i686-pc-windows-gnu" "i686-pc-windows-msvc" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc")
+                  for v in "${target[@]}"; do
+                    cargo clippy --all-targets --all-features -- -D warnings --target ${v}
+                  done
+            - uses: ./.github/actions/rm_cache_cargo
+
+    test_pc_tier1:
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+                release:
+                    - { name: release }
+                    - { name: debug }
+                version: [1.68.0, stable, beta, nightly]
+                prefix: [pc_test]
+        runs-on: ${{ matrix.os }}
+        needs: build_cache_pc_tier1
+        steps:
+            - uses: actions/checkout@v3
+            - uses: ./.github/actions/install_rust_by_version
+            - uses: ./.github/actions/cache_cargo
+            - name: test
+              run: |
+                  cargo test --all -- --nocapture
+                  cargo test --all --release -- --nocapture
+            - name: test linux
+              if: ${{ matrix.os }} == 'ubuntu-latest'
+              run: |
+                  target=("aarch64-unknown-linux-gnu" "i686-unknown-linux-gnu" "x86_64-unknown-linux-gnu")
+                  for v in "${target[@]}"; do
+                    cargo test --all --target ${v} -- --nocapture
+                    cargo test --all --release --target ${v} -- --nocapture
+                  done
+            - name: test macos
+              if: ${{ matrix.os }} == 'macos-latest'
+              run: |
+                  target=("x86_64-apple-darwin")
+                  for v in "${target[@]}"; do
+                    cargo test --all --target ${v} -- --nocapture
+                    cargo test --all --release --target ${v} -- --nocapture
+                  done
+            - name: test windows
+              if: ${{ matrix.os }} == 'windows-latest'
+              run: |
+                  target=("i686-pc-windows-gnu" "i686-pc-windows-msvc" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc")
+                  for v in "${target[@]}"; do
+                    cargo test --all --target ${v} -- --nocapture
+                    cargo test --all --release --target ${v} -- --nocapture
+                  done
+            - uses: ./.github/actions/rm_cache_cargo
+
+    build_target_tier2:
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+                version: [1.68.0, stable, beta, nightly]
+                prefix: [pc_test_target_tier2]
+        runs-on: ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@v3
+            - uses: ./.github/actions/install_rust_by_version
+            - uses: ./.github/actions/cache_cargo
+            - name: build linux
+              if: ${{ matrix.os }} == 'ubuntu-latest'
+              run: |
+                  target=("aarch64-unknown-linux-musl" "arm-unknown-linux-gnueabi" "arm-unknown-linux-gnueabihf" "armv7-unknown-linux-gnueabihf" "loongarch64-unknown-linux-gnu" "powerpc-unknown-linux-gnu" "powerpc64-unknown-linux-gnu" "powerpc64le-unknown-linux-gnu" "riscv64gc-unknown-linux-gnu" "s390x-unknown-linux-gnu" "x86_64-unknown-freebsd" "x86_64-unknown-illumos" "x86_64-unknown-linux-musl" "x86_64-unknown-netbsd")
+                  for v in "${target[@]}"; do
+                    cargo build --target ${v}
+                    cargo build --target ${v} --release
+                  done
+            - name: build macos
+              if: ${{ matrix.os }} == 'macos-latest'
+              run: |
+                  target=("aarch64-apple-darwin")
+                  for v in "${target[@]}"; do
+                    cargo build --target ${v}
+                    cargo build --target ${v} --release
+                  done
+            - name: build windows
+              if: ${{ matrix.os }} == 'windows-latest'
+              run: |
+                  target=("aarch64-pc-windows-msvc")
+                  for v in "${target[@]}"; do
+                    cargo build --target ${v}
+                    cargo build --target ${v} --release
+                  done
+            - uses: ./.github/actions/rm_cache_cargo
+
+    build_cache_android:
+        strategy:
+            matrix:
+                os: [ubuntu-latest]
+                version: [1.68.0, stable, beta, nightly]
+                prefix: [android_test]
+        runs-on: ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+            - uses: ./.github/actions/install_rust_by_version
+            - uses: ./.github/actions/cache_cargo
+            - name: build linux
+              run: |
+                  target=("aarch64-linux-android" "arm-linux-androideabi" "armv7-linux-androideabi" "i686-linux-android" "x86_64-linux-android")
+                  for v in "${target[@]}"; do
+                    cargo build --target ${v}
+                    cargo build --target ${v} --release
+                  done
+            - name: build
+              run: cargo build
+            - uses: ./.github/actions/rm_cache_cargo
+# https://zenn.dev/naokifujita/articles/c890954165c21f
+# https://github.com/actix/actix-web/blob/master/.github/workflows/ci.yml

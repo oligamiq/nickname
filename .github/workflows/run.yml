@@ -1,0 +1,82 @@
+on: [push, pull_request]
+
+jobs:
+    run_pc:
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+                release:
+                    - { name: release }
+                    - { name: debug }
+                version: [1.68.0, stable, beta, nightly]
+                prefix: [pc_run]
+        runs-on: ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+            - uses: ./.github/actions/install_rust_by_version
+            - uses: ./.github/actions/cache_cargo
+            - name: run windows release
+              if: matrix.release.name == 'release' && matrix.os == 'windows-latest'
+              run: |
+                  cargo build --release
+                  cargo run --release > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+              working-directory: ./examples/pc
+            - name: run windows debug
+              if: matrix.release.name == 'debug' && matrix.os == 'windows-latest'
+              run: |
+                  cargo build
+                  cargo run > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+              working-directory: ./examples/pc
+            - name: run release
+              if: matrix.release.name == 'release' && matrix.os != 'windows-latest'
+              run: |
+                  cargo build --release
+                  sudo target/release/pc > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+              working-directory: ./examples/pc
+            - name: run debug
+              if: matrix.release.name == 'debug' && matrix.os != 'windows-latest'
+              run: |
+                  cargo build
+                  sudo target/debug/pc > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+              working-directory: ./examples/pc
+            - name: Upload log on run
+              uses: actions/upload-artifact@v3
+              with:
+                  name: run-log
+                  path: ./examples/pc/${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+            - uses: ./.github/actions/rm_cache_cargo
+
+    concat_logs:
+        runs-on: ubuntu-latest
+        needs: [run_pc]
+        steps:
+            - name: Download artifacts on run
+              uses: actions/download-artifact@v3
+              with:
+                  name: run-log
+                  path: artifacts
+            - name: Concatenate logs
+              run: |
+                  os=("ubuntu-latest" "macos-latest" "windows-latest")
+                  release=("release" "debug")
+                  version=("1.68.0" "stable" "beta" "nightly")
+
+                  ls -la artifacts
+
+                  echo "" > all-logs.txt
+                  for o in "${os[@]}"; do
+                    for r in "${release[@]}"; do
+                      for v in "${version[@]}"; do
+                        log="artifacts/${o}-${v}-${r}-run.log"
+                        echo "==================== ${o}-${v}-${r} ====================" >> all-logs.txt
+                        cat "$log" >> all-logs.txt
+                      done
+                    done
+                  done
+            - name: Upload concatenated log
+              uses: actions/upload-artifact@v3
+              with:
+                  name: run-log
+                  path: all-logs.txt
