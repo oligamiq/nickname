@@ -257,7 +257,7 @@ jobs:
         runs-on: ${{ matrix.os }}
         env:
             RUSTC_FORCE_INCREMENTAL: 1
-        needs: build_cache_pc_tier1
+        needs: build_cache_android
         steps:
             - uses: actions/checkout@v3
             - run: rustup component add clippy

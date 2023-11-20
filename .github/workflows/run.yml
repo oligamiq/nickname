@@ -5,9 +5,6 @@ jobs:
         strategy:
             matrix:
                 os: [ubuntu-latest, macos-latest, windows-latest]
-                release:
-                    - { name: release }
-                    - { name: debug }
                 version: [1.68.0, stable, beta, nightly]
                 prefix: [pc_run]
         runs-on: ${{ matrix.os }}
@@ -18,34 +15,31 @@ jobs:
             - uses: ./.github/actions/install_rust_by_version
             - uses: ./.github/actions/cache_cargo
             - name: run windows release
-              if: matrix.release.name == 'release' && matrix.os == 'windows-latest'
+              if: matrix.os == 'windows-latest'
               run: |
                   cargo build --release
-                  cargo run --release > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
-              working-directory: ./examples/pc
-            - name: run windows debug
-              if: matrix.release.name == 'debug' && matrix.os == 'windows-latest'
-              run: |
+                  cargo run --release > ${{ matrix.os }}-${{ matrix.version }}-release-run.log
                   cargo build
-                  cargo run > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+                  cargo run > ${{ matrix.os }}-${{ matrix.version }}-debug-run.log
               working-directory: ./examples/pc
             - name: run release
-              if: matrix.release.name == 'release' && matrix.os != 'windows-latest'
+              if: matrix.os != 'windows-latest'
               run: |
                   cargo build --release
-                  sudo target/release/pc > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
-              working-directory: ./examples/pc
-            - name: run debug
-              if: matrix.release.name == 'debug' && matrix.os != 'windows-latest'
-              run: |
+                  sudo target/release/pc > ${{ matrix.os }}-${{ matrix.version }}-release-run.log
                   cargo build
-                  sudo target/debug/pc > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+                  sudo target/debug/pc > ${{ matrix.os }}-${{ matrix.version }}-debug-run.log
               working-directory: ./examples/pc
+            - name: Upload log release on run
+              uses: actions/upload-artifact@v3
+              with:
+                  name: run-log
+                  path: ./examples/pc/${{ matrix.os }}-${{ matrix.version }}-release-run.log
             - name: Upload log on run
               uses: actions/upload-artifact@v3
               with:
                   name: run-log
-                  path: ./examples/pc/${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+                  path: ./examples/pc/${{ matrix.os }}-${{ matrix.version }}-debug-run.log
             - uses: ./.github/actions/rm_cache_cargo
 
     concat_logs:
