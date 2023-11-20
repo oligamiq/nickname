@@ -103,31 +103,31 @@ jobs:
               if: matrix.release.name == 'release-run' && matrix.os == 'windows-latest'
               run: |
                   cargo build --release
-                  cargo run --release > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+                  cargo run --release > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}.log
               working-directory: ./examples/pc
             - name: run windows debug
               if: matrix.release.name == 'debug-run' && matrix.os == 'windows-latest'
               run: |
                   cargo build
-                  cargo run > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+                  cargo run > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}.log
               working-directory: ./examples/pc
             - name: run release
               if: matrix.release.name == 'release-run' && matrix.os != 'windows-latest'
               run: |
                   cargo build --release
-                  sudo target/release/pc > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+                  sudo target/release/pc > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}.log
               working-directory: ./examples/pc
             - name: run debug
               if: matrix.release.name == 'debug-run' && matrix.os != 'windows-latest'
               run: |
                   cargo build
-                  sudo target/debug/pc > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+                  sudo target/debug/pc > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}.log
               working-directory: ./examples/pc
             - name: Upload log on run
               uses: actions/upload-artifact@v3
               with:
                   name: run-log
-                  path: ./examples/pc/${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+                  path: ./examples/pc/${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}.log
             - uses: ./.github/actions/rm_cache_cargo
 
     concat_logs:
