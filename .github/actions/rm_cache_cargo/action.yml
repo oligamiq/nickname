@@ -4,7 +4,15 @@ runs:
   using: composite
 
   steps:
-    - name: Clear the cargo caches
+    - name: Clear the cargo caches powershell
+      if: ${{ matrix.os == 'windows-latest' }}
+      shell: powershell
+      run: |
+        cargo install cargo-cache --no-default-features --features ci-autoclean
+        cargo-cache
+    - name: Clear the cargo caches bash
+      if: ${{ matrix.os != 'windows-latest' }}
+      shell: bash
       run: |
         cargo install cargo-cache --no-default-features --features ci-autoclean
         cargo-cache
