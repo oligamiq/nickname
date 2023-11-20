@@ -117,7 +117,7 @@ jobs:
             - name: Upload log on run
               uses: actions/upload-artifact@v3
               with:
-                  name: ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+                  name: artifact
                   path: ./examples/pc/${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
             - uses: ./.github/actions/rm_cache_cargo
 
@@ -128,6 +128,7 @@ jobs:
             - name: Download artifacts on run
               uses: actions/download-artifact@v3
               with:
+                  name: artifact
                   path: artifacts
             - name: Concatenate logs
               run: |
