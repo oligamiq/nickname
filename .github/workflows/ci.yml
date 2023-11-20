@@ -180,6 +180,12 @@ jobs:
                     cargo build --target ${v}
                     cargo build --target ${v} --release
                   done
+            - name: build linux other
+              if: matrix.os == 'ubuntu-latest' && matrix.version != '1.68.0'
+              run: |
+                  rustup target add loongarch64-unknown-linux-gnu
+                  cargo build --target loongarch64-unknown-linux-gnu
+                  cargo build --target loongarch64-unknown-linux-gnu --release
             - name: build macos
               if: matrix.os == 'macos-latest'
               run: |
