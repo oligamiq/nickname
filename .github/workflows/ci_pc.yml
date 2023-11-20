@@ -109,5 +109,26 @@ jobs:
               uses: actions/upload-artifact@v1
               with:
                   name: ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
+
+    concat_logs:
+        runs-on: ubuntu-latest
+        needs: [build_cache, run]
+        steps:
+            - name: Concatenate logs
+              run: |
+                  cat ubuntu-latest-1.68.0-release-run.log > all-logs.txt
+                  cat ubuntu-latest-1.68.0-debug-run.log >> all-logs.txt
+                  cat ubuntu-latest-stable-release-run.log >> all-logs.txt
+                  cat ubuntu-latest-stable-debug-run.log >> all-logs.txt
+                  cat ubuntu-latest-beta-release-run.log >> all-logs.txt
+                  cat ubuntu-latest-beta-debug-run.log >> all-logs.txt
+                  cat ubuntu-latest-nightly-release-run.log >> all-logs.txt
+                  cat ubuntu-latest-nightly-debug-run.log >> all-logs.txt
+
+            - name: Upload concatenated log
+              uses: actions/upload-artifact@v2
+              with:
+                  name: all-logs
+                  path: all-logs.txt
 # https://zenn.dev/naokifujita/articles/c890954165c21f
 # https://github.com/actix/actix-web/blob/master/.github/workflows/ci.yml
