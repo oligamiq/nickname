@@ -145,6 +145,9 @@ jobs:
                   release=("release" "debug")
                   version=("1.68.0" "stable" "beta" "nightly")
 
+                  ls -la artifacts
+                  ls -la artifacts/run-log
+
                   echo "" > all-logs.txt
                   for o in "${os[@]}"; do
                     for r in "${release[@]}"; do
