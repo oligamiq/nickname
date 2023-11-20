@@ -128,9 +128,9 @@ jobs:
                   cargo test --all --release -- --nocapture
             - name: test linux
               if: matrix.os == 'ubuntu-latest'
+              # linking error "aarch64-unknown-linux-gnu"
               run: |
-                  sudo apt-get install -y gcc-aarch64-linux-gnu
-                  target=("aarch64-unknown-linux-gnu" "i686-unknown-linux-gnu" "x86_64-unknown-linux-gnu")
+                  target=("i686-unknown-linux-gnu" "x86_64-unknown-linux-gnu")
                   for v in "${target[@]}"; do
                     rustup target add ${v}
                     cargo test --all --target ${v} -- --nocapture
