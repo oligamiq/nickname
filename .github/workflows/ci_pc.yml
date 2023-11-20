@@ -102,22 +102,22 @@ jobs:
               if: matrix.release.name == 'release'
               run: |
                   cargo build --release
-                  cargo run --release > ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
+                  cargo run --release > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
               working-directory: ./examples/pc
               continue-on-error: true
             - name: run debug
               if: matrix.release.name == 'debug'
               run: |
                   cargo build
-                  cargo run > ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
+                  cargo run > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
               working-directory: ./examples/pc
               continue-on-error: true
             - uses: ./.github/actions/rm_cache_cargo
             - name: Upload log on run
-              uses: actions/upload-artifact@v1
+              uses: actions/upload-artifact@v3
               with:
-                  name: ./examples/pc/${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
-                  path: ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
+                  name: ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+                  path: ./examples/pc/${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
 
     concat_logs:
         runs-on: ubuntu-latest
