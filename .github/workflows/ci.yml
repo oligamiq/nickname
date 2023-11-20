@@ -171,8 +171,10 @@ jobs:
             - uses: ./.github/actions/cache_cargo
             - name: build linux
               if: matrix.os == 'ubuntu-latest'
+              # note: not all platforms have the standard library pre-compiled: https://doc.rust-lang.org/nightly/rustc/platform-support.html
+              # "loongarch64-unknown-linux-gnu"
               run: |
-                  target=("aarch64-unknown-linux-musl" "arm-unknown-linux-gnueabi" "arm-unknown-linux-gnueabihf" "armv7-unknown-linux-gnueabihf" "loongarch64-unknown-linux-gnu" "powerpc-unknown-linux-gnu" "powerpc64-unknown-linux-gnu" "powerpc64le-unknown-linux-gnu" "riscv64gc-unknown-linux-gnu" "s390x-unknown-linux-gnu" "x86_64-unknown-freebsd" "x86_64-unknown-illumos" "x86_64-unknown-linux-musl" "x86_64-unknown-netbsd")
+                  target=("aarch64-unknown-linux-musl" "arm-unknown-linux-gnueabi" "arm-unknown-linux-gnueabihf" "armv7-unknown-linux-gnueabihf" "powerpc-unknown-linux-gnu" "powerpc64-unknown-linux-gnu" "powerpc64le-unknown-linux-gnu" "riscv64gc-unknown-linux-gnu" "s390x-unknown-linux-gnu" "x86_64-unknown-freebsd" "x86_64-unknown-illumos" "x86_64-unknown-linux-musl" "x86_64-unknown-netbsd")
                   for v in "${target[@]}"; do
                     rustup target add ${v}
                     cargo build --target ${v}
