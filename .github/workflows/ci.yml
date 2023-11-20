@@ -127,8 +127,18 @@ jobs:
                   cargo test --all -- --nocapture
                   cargo test --all --release -- --nocapture
             - name: test linux
+              uses: uraimo/run-on-arch-action@v2
+              id: build
+              with:
+                  arch: aarch64
+                  distro: ubuntu_latest
+                  run: |
+                      rustup target add aarch64-unknown-linux-gnu
+                      cargo test --all --target aarch64-unknown-linux-gnu -- --nocapture
+                      cargo test --all --target aarch64-unknown-linux-gnu --release -- --nocapture
+            - name: test linux
               if: matrix.os == 'ubuntu-latest'
-              # linking error "aarch64-unknown-linux-gnu"
+              # cargo test can only real platform
               run: |
                   target=("i686-unknown-linux-gnu" "x86_64-unknown-linux-gnu")
                   for v in "${target[@]}"; do
