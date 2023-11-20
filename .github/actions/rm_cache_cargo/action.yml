@@ -14,5 +14,5 @@ runs:
       if: ${{ matrix.os != 'windows-latest' }}
       shell: bash
       run: |
-        cargo install cargo-cache --no-default-features --features ci-autoclean
+        cargo install cargo-cache --no-default-features --features ci-autoclean --force
         cargo-cache

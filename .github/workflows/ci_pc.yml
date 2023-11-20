@@ -34,6 +34,8 @@ jobs:
             - run: rustup component add rustfmt
             - uses: ./.github/actions/install_rust_by_version
             - uses: ./.github/actions/cache_cargo
+            - name: install fmt
+              run: rustup component add rustfmt
             - name: fmt
               run: cargo fmt --all -- --check
             - uses: ./.github/actions/rm_cache_cargo
@@ -54,6 +56,8 @@ jobs:
             - run: rustup component add clippy
             - uses: ./.github/actions/install_rust_by_version
             - uses: ./.github/actions/cache_cargo
+            - name: install clippy
+              run: rustup component add clippy-preview
             - name: clippy
               run: cargo clippy --all-targets --all-features -- -D warnings
             - uses: ./.github/actions/rm_cache_cargo
