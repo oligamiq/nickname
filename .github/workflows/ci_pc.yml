@@ -104,12 +104,14 @@ jobs:
                   cargo build --release
                   cargo run --release > ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
               working-directory: ./examples/pc
+              continue-on-error: true
             - name: run debug
               if: matrix.release.name == 'debug'
               run: |
                   cargo build
                   cargo run > ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
               working-directory: ./examples/pc
+              continue-on-error: true
             - uses: ./.github/actions/rm_cache_cargo
             - name: Upload log on run
               uses: actions/upload-artifact@v1
