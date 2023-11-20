@@ -2,7 +2,10 @@ on: [push, pull_request]
 
 jobs:
     build_cache:
-        runs-on: windows-latest
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+        runs-on: ${{ matrix.os }}
         steps:
             - uses: actions/checkout@v3
               with:
@@ -13,7 +16,10 @@ jobs:
               working-directory: .
 
     fmt:
-        runs-on: windows-latest
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+        runs-on: ${{ matrix.os }}
         needs: build_cache
         steps:
             - uses: actions/checkout@v3
@@ -24,7 +30,10 @@ jobs:
               working-directory: .
 
     clippy:
-        runs-on: windows-latest
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+        runs-on: ${{ matrix.os }}
         env:
             RUSTC_FORCE_INCREMENTAL: 1
         needs: build_cache
@@ -37,7 +46,10 @@ jobs:
               working-directory: .
 
     test:
-        runs-on: windows-latest
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+        runs-on: ${{ matrix.os }}
         needs: build_cache
         steps:
             - uses: actions/checkout@v3
