@@ -116,15 +116,15 @@ jobs:
             - name: run release
               if: matrix.release.name == 'release-run' && matrix.os != 'windows-latest'
               run: |
-                  sudo cargo build --release
-                  sudo cargo run --release > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+                  sudo `which cargo` build --release
+                  sudo `which cargo` run --release > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
               working-directory: ./examples/pc
               continue-on-error: true
             - name: run debug
               if: matrix.release.name == 'debug-run' && matrix.os != 'windows-latest'
               run: |
-                  sudo cargo build
-                  sudo cargo run > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+                  sudo `which cargo` build
+                  sudo `which cargo` run > ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
               working-directory: ./examples/pc
               continue-on-error: true
             - name: Upload log on run
