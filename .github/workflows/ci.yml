@@ -129,8 +129,7 @@ jobs:
             - name: test linux
               if: matrix.os == 'ubuntu-latest'
               run: |
-                  sudo apt update
-                  sudo apt-get install gcc-aarch64-linux-gnu
+                  sudo apt-get install -y gcc-aarch64-linux-gnu
                   target=("aarch64-unknown-linux-gnu" "i686-unknown-linux-gnu" "x86_64-unknown-linux-gnu")
                   for v in "${target[@]}"; do
                     rustup target add ${v}
