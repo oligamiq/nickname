@@ -3,5 +3,6 @@ fn main() {
     let device_name = nickname.get().unwrap();
     println!("{device_name}");
 
-    nickname.set("oligami-pc").unwrap();
+    let set = nickname.set("oligami-pc");
+    println!("{:?}", set);
 }

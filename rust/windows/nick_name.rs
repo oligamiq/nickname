@@ -209,8 +209,6 @@ impl NickName {
             let mut buffer = OsStr::new(&nickname).encode_wide().collect::<Vec<_>>();
             buffer.push(0);
 
-            println!("buffer: {:?}", buffer);
-
             // SetComputerNameExWを呼び出してコンピュータ名を設定
             if SetComputerNameExW(ComputerNamePhysicalDnsHostname, buffer.as_ptr()) != 0 {
                 Ok(())
