@@ -149,7 +149,7 @@ jobs:
                   for o in "${os[@]}"; do
                     for r in "${release[@]}"; do
                       for v in "${version[@]}"; do
-                        log="artifacts/${o}-${v}-${r}-run.log"
+                        log="artifacts/run-log/${o}-${v}-${r}-run.log"
                         echo "==================== ${o}-${v}-${r} ====================" >> all-logs.txt
                         cat "$log" >> all-logs.txt
                       done
