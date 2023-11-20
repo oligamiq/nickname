@@ -17,7 +17,7 @@ jobs:
                   cargo build
                   cargo build --release
             - name: build linux
-              if: ${{ matrix.os }} == 'ubuntu-latest'
+              if: matrix.os == 'ubuntu-latest'
               run: |
                   target=("aarch64-unknown-linux-gnu" "i686-unknown-linux-gnu" "x86_64-unknown-linux-gnu")
                   for v in "${target[@]}"; do
@@ -26,7 +26,7 @@ jobs:
                     cargo build --target ${v} --release
                   done
             - name: build macos
-              if: ${{ matrix.os }} == 'macos-latest'
+              if: matrix.os == 'macos-latest'
               run: |
                   target=("x86_64-apple-darwin")
                   for v in "${target[@]}"; do
@@ -35,7 +35,7 @@ jobs:
                     cargo build --target ${v} --release
                   done
             - name: build windows
-              if: ${{ matrix.os }} == 'windows-latest'
+              if: matrix.os == 'windows-latest'
               run: |
                   $target = @("i686-pc-windows-gnu", "i686-pc-windows-msvc", "x86_64-pc-windows-gnu", "x86_64-pc-windows-msvc")
                   foreach ($v in $target) {
@@ -85,7 +85,7 @@ jobs:
               run: |
                   cargo clippy --all-targets --all-features -- -D warnings
             - name: clippy linux
-              if: ${{ matrix.os }} == 'ubuntu-latest'
+              if: matrix.os == 'ubuntu-latest'
               run: |
                   target=("aarch64-unknown-linux-gnu" "i686-unknown-linux-gnu" "x86_64-unknown-linux-gnu")
                   for v in "${target[@]}"; do
@@ -93,7 +93,7 @@ jobs:
                     cargo clippy --all-targets --all-features -- -D warnings --target ${v}
                   done
             - name: clippy macos
-              if: ${{ matrix.os }} == 'macos-latest'
+              if: matrix.os == 'macos-latest'
               run: |
                   target=("x86_64-apple-darwin")
                   for v in "${target[@]}"; do
@@ -101,7 +101,7 @@ jobs:
                     cargo clippy --all-targets --all-features -- -D warnings --target ${v}
                   done
             - name: clippy windows
-              if: ${{ matrix.os }} == 'windows-latest'
+              if: matrix.os == 'windows-latest'
               run: |
                   $target = @("i686-pc-windows-gnu", "i686-pc-windows-msvc", "x86_64-pc-windows-gnu", "x86_64-pc-windows-msvc")
                   foreach ($v in $target) {
@@ -130,7 +130,7 @@ jobs:
                   cargo test --all -- --nocapture
                   cargo test --all --release -- --nocapture
             - name: test linux
-              if: ${{ matrix.os }} == 'ubuntu-latest'
+              if: matrix.os == 'ubuntu-latest'
               run: |
                   target=("aarch64-unknown-linux-gnu" "i686-unknown-linux-gnu" "x86_64-unknown-linux-gnu")
                   for v in "${target[@]}"; do
@@ -139,7 +139,7 @@ jobs:
                     cargo test --all --release --target ${v} -- --nocapture
                   done
             - name: test macos
-              if: ${{ matrix.os }} == 'macos-latest'
+              if: matrix.os == 'macos-latest'
               run: |
                   target=("x86_64-apple-darwin")
                   for v in "${target[@]}"; do
@@ -148,7 +148,7 @@ jobs:
                     cargo test --all --release --target ${v} -- --nocapture
                   done- name: test windows
             - name: test windows
-              if: ${{ matrix.os }} == 'windows-latest'
+              if: matrix.os == 'windows-latest'
               run: |
                   $target = @("i686-pc-windows-gnu", "i686-pc-windows-msvc", "x86_64-pc-windows-gnu", "x86_64-pc-windows-msvc")
                   foreach ($v in $target) {
@@ -170,7 +170,7 @@ jobs:
             - uses: ./.github/actions/install_rust_by_version
             - uses: ./.github/actions/cache_cargo
             - name: build linux
-              if: ${{ matrix.os }} == 'ubuntu-latest'
+              if: matrix.os == 'ubuntu-latest'
               run: |
                   target=("aarch64-unknown-linux-musl" "arm-unknown-linux-gnueabi" "arm-unknown-linux-gnueabihf" "armv7-unknown-linux-gnueabihf" "loongarch64-unknown-linux-gnu" "powerpc-unknown-linux-gnu" "powerpc64-unknown-linux-gnu" "powerpc64le-unknown-linux-gnu" "riscv64gc-unknown-linux-gnu" "s390x-unknown-linux-gnu" "x86_64-unknown-freebsd" "x86_64-unknown-illumos" "x86_64-unknown-linux-musl" "x86_64-unknown-netbsd")
                   for v in "${target[@]}"; do
@@ -179,7 +179,7 @@ jobs:
                     cargo build --target ${v} --release
                   done
             - name: build macos
-              if: ${{ matrix.os }} == 'macos-latest'
+              if: matrix.os == 'macos-latest'
               run: |
                   target=("aarch64-apple-darwin")
                   for v in "${target[@]}"; do
@@ -188,7 +188,7 @@ jobs:
                     cargo build --target ${v} --release
                   done
             - name: build windows
-              if: ${{ matrix.os }} == 'windows-latest'
+              if: matrix.os == 'windows-latest'
               run: |
                   $target = @("aarch64-pc-windows-msvc")
                   foreach ($v in $target) {
