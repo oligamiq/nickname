@@ -93,9 +93,10 @@ jobs:
                     - { name: debug }
                 version: [1.68.0, stable, beta, nightly]
         runs-on: ${{ matrix.os }}
-        needs: build_cache
         steps:
             - uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
             - uses: ./.github/actions/install_rust_by_version
             - uses: ./.github/actions/cache_cargo
             - name: run release
@@ -118,6 +119,7 @@ jobs:
               with:
                   name: ${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
                   path: ./examples/pc/${{ matrix.os }}-${{ matrix.version }}-${{ matrix.release.name }}-run.log
+            - uses: ./.github/actions/rm_cache_cargo
 
     concat_logs:
         runs-on: ubuntu-latest
