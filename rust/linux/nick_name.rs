@@ -53,6 +53,8 @@ impl NickName {
             target_os = "freebsd",
             target_os = "ios",
             target_os = "macos"
+            target_os = "solarish",
+            target_os = "illumos",
         )))]
         #[allow(non_camel_case_types)]
         type nickname_len_t = libc::size_t;
@@ -61,7 +63,9 @@ impl NickName {
             target_os = "dragonfly",
             target_os = "freebsd",
             target_os = "ios",
-            target_os = "macos"
+            target_os = "macos",
+            target_os = "solarish",
+            target_os = "illumos",
         ))]
         #[allow(non_camel_case_types)]
         type nickname_len_t = libc::c_int;
