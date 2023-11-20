@@ -135,7 +135,7 @@ jobs:
                   distro: ubuntu_latest
 
                   # Not required, but speeds up builds by reusing the cache from the previous job
-                  githubToken: ${{ github.token }}
+                  # githubToken: ${{ github.token }}
 
                   install: |
                       apt-get update -q -y
