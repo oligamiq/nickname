@@ -37,12 +37,12 @@ jobs:
             - name: build windows
               if: ${{ matrix.os }} == 'windows-latest'
               run: |
-                  target=("i686-pc-windows-gnu" "i686-pc-windows-msvc" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc")
-                  for v in "${target[@]}"; do
-                    rustup target add ${v}
-                    cargo build --target ${v}
-                    cargo build --target ${v} --release
-                  done
+                  $target = @("i686-pc-windows-gnu", "i686-pc-windows-msvc", "x86_64-pc-windows-gnu", "x86_64-pc-windows-msvc")
+                  foreach ($v in $target) {
+                      rustup target add $v
+                      cargo build --target ${v}
+                      cargo build --target ${v} --release
+                  }
             - uses: ./.github/actions/rm_cache_cargo
 
     fmt_pc:
@@ -103,11 +103,11 @@ jobs:
             - name: clippy windows
               if: ${{ matrix.os }} == 'windows-latest'
               run: |
-                  target=("i686-pc-windows-gnu" "i686-pc-windows-msvc" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc")
-                  for v in "${target[@]}"; do
-                    rustup target add ${v}
-                    cargo clippy --all-targets --all-features -- -D warnings --target ${v}
-                  done
+                  $target = @("i686-pc-windows-gnu", "i686-pc-windows-msvc", "x86_64-pc-windows-gnu", "x86_64-pc-windows-msvc")
+                  foreach ($v in $target) {
+                      rustup target add $v
+                      cargo clippy --all-targets --all-features -- -D warnings --target ${v}
+                  }
             - uses: ./.github/actions/rm_cache_cargo
 
     test_pc_tier1:
@@ -146,16 +146,16 @@ jobs:
                     rustup target add ${v}
                     cargo test --all --target ${v} -- --nocapture
                     cargo test --all --release --target ${v} -- --nocapture
-                  done
+                  done- name: test windows
             - name: test windows
               if: ${{ matrix.os }} == 'windows-latest'
               run: |
-                  target=("i686-pc-windows-gnu" "i686-pc-windows-msvc" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc")
-                  for v in "${target[@]}"; do
-                    rustup target add ${v}
-                    cargo test --all --target ${v} -- --nocapture
-                    cargo test --all --release --target ${v} -- --nocapture
-                  done
+                  $target = @("i686-pc-windows-gnu", "i686-pc-windows-msvc", "x86_64-pc-windows-gnu", "x86_64-pc-windows-msvc")
+                  foreach ($v in $target) {
+                      rustup target add $v
+                      cargo test --all --target $v -- --nocapture
+                      cargo test --all --release --target $v -- --nocapture
+                  }
             - uses: ./.github/actions/rm_cache_cargo
 
     build_target_tier2:
@@ -190,12 +190,12 @@ jobs:
             - name: build windows
               if: ${{ matrix.os }} == 'windows-latest'
               run: |
-                  target=("aarch64-pc-windows-msvc")
-                  for v in "${target[@]}"; do
-                    rustup target add ${v}
-                    cargo build --target ${v}
-                    cargo build --target ${v} --release
-                  done
+                  $target = @("aarch64-pc-windows-msvc")
+                  foreach ($v in $target) {
+                      rustup target add $v
+                      cargo build --target ${v}
+                      cargo build --target ${v} --release
+                  }
             - uses: ./.github/actions/rm_cache_cargo
 
     build_cache_android:
@@ -211,7 +211,7 @@ jobs:
                   fetch-depth: 0
             - uses: ./.github/actions/install_rust_by_version
             - uses: ./.github/actions/cache_cargo
-            - name: build linux
+            - name: build android
               run: |
                   target=("aarch64-linux-android" "arm-linux-androideabi" "armv7-linux-androideabi" "i686-linux-android" "x86_64-linux-android")
                   for v in "${target[@]}"; do
