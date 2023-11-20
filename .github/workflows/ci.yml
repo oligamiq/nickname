@@ -127,6 +127,7 @@ jobs:
                   cargo test --all -- --nocapture
                   cargo test --all --release -- --nocapture
             - name: test linux
+              if: matrix.os == 'ubuntu-latest'
               uses: uraimo/run-on-arch-action@v2
               id: build
               with:
