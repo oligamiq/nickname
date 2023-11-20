@@ -5,34 +5,46 @@ jobs:
         strategy:
             matrix:
                 os: [ubuntu-latest, macos-latest, windows-latest]
+                release:
+                    - { name: release }
+                    - { name: debug }
+                version: [1.68.0, stable, beta, nightly]
         runs-on: ${{ matrix.os }}
         steps:
             - uses: actions/checkout@v3
               with:
                   fetch-depth: 0
+            - uses: ./.github/actions/install_rust_by_version
             - uses: ./.github/actions/cache_cargo
             - name: build
               run: cargo build
-              working-directory: .
+            - uses: ./.github/actions/rm_cache_cargo
 
     fmt:
         strategy:
             matrix:
                 os: [ubuntu-latest, macos-latest, windows-latest]
+                release:
+                    - { name: debug }
+                version: [1.68.0, stable, beta, nightly]
         runs-on: ${{ matrix.os }}
         needs: build_cache
         steps:
             - uses: actions/checkout@v3
             - run: rustup component add rustfmt
+            - uses: ./.github/actions/install_rust_by_version
             - uses: ./.github/actions/cache_cargo
             - name: fmt
               run: cargo fmt --all -- --check
-              working-directory: .
+            - uses: ./.github/actions/rm_cache_cargo
 
     clippy:
         strategy:
             matrix:
                 os: [ubuntu-latest, macos-latest, windows-latest]
+                release:
+                    - { name: debug }
+                version: [1.68.0, stable, beta, nightly]
         runs-on: ${{ matrix.os }}
         env:
             RUSTC_FORCE_INCREMENTAL: 1
@@ -40,21 +52,32 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - run: rustup component add clippy
+            - uses: ./.github/actions/install_rust_by_version
             - uses: ./.github/actions/cache_cargo
             - name: clippy
               run: cargo clippy --all-targets --all-features -- -D warnings
-              working-directory: .
+            - uses: ./.github/actions/rm_cache_cargo
 
     test:
         strategy:
             matrix:
                 os: [ubuntu-latest, macos-latest, windows-latest]
+                release:
+                    - { name: release }
+                    - { name: debug }
+                version: [1.68.0, stable, beta, nightly]
         runs-on: ${{ matrix.os }}
         needs: build_cache
         steps:
             - uses: actions/checkout@v3
+            - uses: ./.github/actions/install_rust_by_version
             - uses: ./.github/actions/cache_cargo
-            - name: test
+            - name: test release
+              if: matrix.release.name == 'release'
+              run: cargo test --all --release -- --nocapture
+            - name: test debug
+              if: matrix.release.name == 'debug'
               run: cargo test --all -- --nocapture
-              working-directory: .
+            - uses: ./.github/actions/rm_cache_cargo
 # https://zenn.dev/naokifujita/articles/c890954165c21f
+# https://github.com/actix/actix-web/blob/master/.github/workflows/ci.yml
