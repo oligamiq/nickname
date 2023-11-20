@@ -21,6 +21,7 @@ jobs:
               run: |
                   target=("aarch64-unknown-linux-gnu" "i686-unknown-linux-gnu" "x86_64-unknown-linux-gnu")
                   for v in "${target[@]}"; do
+                    rustup target add ${v}
                     cargo build --target ${v}
                     cargo build --target ${v} --release
                   done
@@ -29,6 +30,7 @@ jobs:
               run: |
                   target=("x86_64-apple-darwin")
                   for v in "${target[@]}"; do
+                    rustup target add ${v}
                     cargo build --target ${v}
                     cargo build --target ${v} --release
                   done
@@ -37,6 +39,7 @@ jobs:
               run: |
                   target=("i686-pc-windows-gnu" "i686-pc-windows-msvc" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc")
                   for v in "${target[@]}"; do
+                    rustup target add ${v}
                     cargo build --target ${v}
                     cargo build --target ${v} --release
                   done
@@ -86,6 +89,7 @@ jobs:
               run: |
                   target=("aarch64-unknown-linux-gnu" "i686-unknown-linux-gnu" "x86_64-unknown-linux-gnu")
                   for v in "${target[@]}"; do
+                    rustup target add ${v}
                     cargo clippy --all-targets --all-features -- -D warnings --target ${v}
                   done
             - name: clippy macos
@@ -93,6 +97,7 @@ jobs:
               run: |
                   target=("x86_64-apple-darwin")
                   for v in "${target[@]}"; do
+                    rustup target add ${v}
                     cargo clippy --all-targets --all-features -- -D warnings --target ${v}
                   done
             - name: clippy windows
@@ -100,6 +105,7 @@ jobs:
               run: |
                   target=("i686-pc-windows-gnu" "i686-pc-windows-msvc" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc")
                   for v in "${target[@]}"; do
+                    rustup target add ${v}
                     cargo clippy --all-targets --all-features -- -D warnings --target ${v}
                   done
             - uses: ./.github/actions/rm_cache_cargo
@@ -128,6 +134,7 @@ jobs:
               run: |
                   target=("aarch64-unknown-linux-gnu" "i686-unknown-linux-gnu" "x86_64-unknown-linux-gnu")
                   for v in "${target[@]}"; do
+                    rustup target add ${v}
                     cargo test --all --target ${v} -- --nocapture
                     cargo test --all --release --target ${v} -- --nocapture
                   done
@@ -136,6 +143,7 @@ jobs:
               run: |
                   target=("x86_64-apple-darwin")
                   for v in "${target[@]}"; do
+                    rustup target add ${v}
                     cargo test --all --target ${v} -- --nocapture
                     cargo test --all --release --target ${v} -- --nocapture
                   done
@@ -144,6 +152,7 @@ jobs:
               run: |
                   target=("i686-pc-windows-gnu" "i686-pc-windows-msvc" "x86_64-pc-windows-gnu" "x86_64-pc-windows-msvc")
                   for v in "${target[@]}"; do
+                    rustup target add ${v}
                     cargo test --all --target ${v} -- --nocapture
                     cargo test --all --release --target ${v} -- --nocapture
                   done
@@ -165,6 +174,7 @@ jobs:
               run: |
                   target=("aarch64-unknown-linux-musl" "arm-unknown-linux-gnueabi" "arm-unknown-linux-gnueabihf" "armv7-unknown-linux-gnueabihf" "loongarch64-unknown-linux-gnu" "powerpc-unknown-linux-gnu" "powerpc64-unknown-linux-gnu" "powerpc64le-unknown-linux-gnu" "riscv64gc-unknown-linux-gnu" "s390x-unknown-linux-gnu" "x86_64-unknown-freebsd" "x86_64-unknown-illumos" "x86_64-unknown-linux-musl" "x86_64-unknown-netbsd")
                   for v in "${target[@]}"; do
+                    rustup target add ${v}
                     cargo build --target ${v}
                     cargo build --target ${v} --release
                   done
@@ -173,6 +183,7 @@ jobs:
               run: |
                   target=("aarch64-apple-darwin")
                   for v in "${target[@]}"; do
+                    rustup target add ${v}
                     cargo build --target ${v}
                     cargo build --target ${v} --release
                   done
@@ -181,6 +192,7 @@ jobs:
               run: |
                   target=("aarch64-pc-windows-msvc")
                   for v in "${target[@]}"; do
+                    rustup target add ${v}
                     cargo build --target ${v}
                     cargo build --target ${v} --release
                   done
@@ -203,6 +215,7 @@ jobs:
               run: |
                   target=("aarch64-linux-android" "arm-linux-androideabi" "armv7-linux-androideabi" "i686-linux-android" "x86_64-linux-android")
                   for v in "${target[@]}"; do
+                    rustup target add ${v}
                     cargo build --target ${v}
                     cargo build --target ${v} --release
                   done
