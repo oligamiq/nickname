@@ -103,7 +103,7 @@ jobs:
               run: cargo run --release > ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
             - name: run debug
               if: matrix.release.name == 'debug'
-              run: cargo run --all > ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
+              run: cargo run > ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
             - uses: ./.github/actions/rm_cache_cargo
             - name: Upload log on run
               uses: actions/upload-artifact@v1
