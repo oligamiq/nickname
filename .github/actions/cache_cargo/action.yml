@@ -19,7 +19,6 @@ runs:
         key: ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-cargo-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-cargo-
 
-
 # https://zenn.dev/naokifujita/articles/c890954165c21f
 # https://zenn.dev/kt3k/articles/d557cc874961ab
 # https://github.com/marketplace/actions/git-restore-mtime
