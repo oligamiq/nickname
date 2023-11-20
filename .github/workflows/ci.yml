@@ -245,5 +245,34 @@ jobs:
             - name: build
               run: cargo build
             - uses: ./.github/actions/rm_cache_cargo
+
+    clippy_android:
+        strategy:
+            matrix:
+                os: [ubuntu-latest]
+                version: [1.68.0, stable, beta, nightly]
+                prefix: [android_test]
+        runs-on: ${{ matrix.os }}
+        env:
+            RUSTC_FORCE_INCREMENTAL: 1
+        needs: build_cache_pc_tier1
+        steps:
+            - uses: actions/checkout@v3
+            - run: rustup component add clippy
+            - uses: ./.github/actions/install_rust_by_version
+            - uses: ./.github/actions/cache_cargo
+            - name: install clippy
+              run: rustup component add clippy-preview
+            - name: clippy
+              run: |
+                  cargo clippy --all-targets --all-features -- -D warnings
+            - name: clippy linux
+              run: |
+                  target=("aarch64-linux-android" "arm-linux-androideabi" "armv7-linux-androideabi" "i686-linux-android" "x86_64-linux-android")
+                  for v in "${target[@]}"; do
+                    rustup target add ${v}
+                    cargo clippy --target ${v} --all-targets --all-features -- -D warnings
+                  done
+            - uses: ./.github/actions/rm_cache_cargo
 # https://zenn.dev/naokifujita/articles/c890954165c21f
 # https://github.com/actix/actix-web/blob/master/.github/workflows/ci.yml
