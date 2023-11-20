@@ -132,8 +132,15 @@ jobs:
               with:
                   arch: aarch64
                   distro: ubuntu_latest
-                  run: |
+
+                  # Not required, but speeds up builds by reusing the cache from the previous job
+                  githubToken: ${{ github.token }}
+
+                  install: |
+                      curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
                       rustup target add aarch64-unknown-linux-gnu
+
+                  run: |
                       cargo test --all --target aarch64-unknown-linux-gnu -- --nocapture
                       cargo test --all --target aarch64-unknown-linux-gnu --release -- --nocapture
             - name: test linux
