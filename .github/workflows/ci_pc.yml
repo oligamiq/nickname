@@ -100,15 +100,22 @@ jobs:
             - uses: ./.github/actions/cache_cargo
             - name: run release
               if: matrix.release.name == 'release'
-              run: cargo run --release > ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
+              run: |
+                  cargo build --release
+                  cargo run --release > ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
+              working-directory: ./examples/pc
             - name: run debug
               if: matrix.release.name == 'debug'
-              run: cargo run > ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
+              run: |
+                  cargo build
+                  cargo run > ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
+              working-directory: ./examples/pc
             - uses: ./.github/actions/rm_cache_cargo
             - name: Upload log on run
               uses: actions/upload-artifact@v1
               with:
-                  name: ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
+                  name: ./examples/pc/${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
+                  path: ${{ runner.os }}-${{ runner.version }}-${{ runner.release.name }}-run.log
 
     concat_logs:
         runs-on: ubuntu-latest
