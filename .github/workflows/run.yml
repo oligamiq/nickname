@@ -121,7 +121,7 @@ jobs:
               uses: actions/upload-artifact@v3
               with:
                   name: run-log
-                  path: android-dinghy-${{ matrix.api-level }}-run.log
+                  path: ./examples/android/android-dinghy-${{ matrix.api-level }}-run.log
 
     concat_logs:
         runs-on: ubuntu-latest
