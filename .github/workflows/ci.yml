@@ -7,6 +7,7 @@ jobs:
                 os: [ubuntu-latest, macos-latest, windows-latest]
                 version: [1.68.0, stable, beta, nightly]
                 prefix: [pc_test_target_tier1]
+            fail-fast: false
         runs-on: ${{ matrix.os }}
         steps:
             - uses: actions/checkout@v3
@@ -51,6 +52,7 @@ jobs:
                 os: [ubuntu-latest, macos-latest, windows-latest]
                 version: [1.68.0, stable, beta, nightly]
                 prefix: [pc_test_target_tier1]
+            fail-fast: false
         runs-on: ${{ matrix.os }}
         needs: build_cache_pc_tier1
         steps:
@@ -70,6 +72,7 @@ jobs:
                 os: [ubuntu-latest, macos-latest, windows-latest]
                 version: [1.68.0, stable, beta, nightly]
                 prefix: [pc_test]
+            fail-fast: false
         runs-on: ${{ matrix.os }}
         env:
             RUSTC_FORCE_INCREMENTAL: 1
@@ -116,6 +119,7 @@ jobs:
                 os: [ubuntu-latest, macos-latest, windows-latest]
                 version: [1.68.0, stable, beta, nightly]
                 prefix: [pc_test]
+            fail-fast: false
         runs-on: ${{ matrix.os }}
         needs: build_cache_pc_tier1
         steps:
@@ -139,11 +143,12 @@ jobs:
                   #       --volume "${PWD}/:/app/"
                   run: |
                       apt-get update -q -y
-                      apt-get install -q -y curl gcc
-                      curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-                      source "$HOME/.cargo/env"
-                      rustup default ${{ matrix.version }}
-                      rustup target add aarch64-unknown-linux-gnu
+                      apt-get install -y curl
+                      curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${{ matrix.version }} --profile minimal
+                      apt-get remove -y curl
+                      apt-get --no-install-recommends install -y -q gcc
+                      apt-get autoremove -y
+                      apt-get clean -y
                       source "$HOME/.cargo/env"
                       cargo test --all --target aarch64-unknown-linux-gnu -- --nocapture
                       cargo test --all --target aarch64-unknown-linux-gnu --release -- --nocapture
@@ -199,6 +204,7 @@ jobs:
                 os: [ubuntu-latest, macos-latest, windows-latest]
                 version: [1.68.0, stable, beta, nightly]
                 prefix: [pc_test_target_tier2]
+            fail-fast: false
         runs-on: ${{ matrix.os }}
         steps:
             - uses: actions/checkout@v3
@@ -247,6 +253,7 @@ jobs:
                 os: [ubuntu-latest]
                 version: [1.68.0, stable, beta, nightly]
                 prefix: [android_test]
+            fail-fast: false
         runs-on: ${{ matrix.os }}
         steps:
             - uses: actions/checkout@v3
@@ -272,6 +279,7 @@ jobs:
                 os: [ubuntu-latest]
                 version: [1.68.0, stable, beta, nightly]
                 prefix: [android_test]
+            fail-fast: false
         runs-on: ${{ matrix.os }}
         env:
             RUSTC_FORCE_INCREMENTAL: 1
@@ -322,6 +330,7 @@ jobs:
                 exclude:
                     - os: ubuntu-latest
                       api-level: 33
+            fail-fast: false
         runs-on: ${{ matrix.os }}
         env:
             RUSTC_FORCE_INCREMENTAL: 1
