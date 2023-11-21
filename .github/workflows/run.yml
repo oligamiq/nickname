@@ -84,7 +84,6 @@ jobs:
                   profile: pixel_2
                   ram-size: "4096M"
                   disk-size: "14G"
-                  sdcard-path-or-size: "1000M"
                   disable-animations: false
                   script: bash ../../workflow/android/run.sh
                   working-directory: ./examples/android/
@@ -100,7 +99,6 @@ jobs:
                   heap-size: "512M"
                   ram-size: "4096M"
                   disk-size: "14G"
-                  sdcard-path-or-size: "4096M"
                   disable-animations: false
                   script: bash ../../workflow/android/run.sh
                   working-directory: ./examples/android/
