@@ -139,7 +139,7 @@ jobs:
 
                   install: |
                       apt-get update -q -y
-                      apt-get install -q -y curl
+                      apt-get install -q -y curl gcc
                       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
                       source "$HOME/.cargo/env"
                       rustup target add aarch64-unknown-linux-gnu
