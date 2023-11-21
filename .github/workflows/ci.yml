@@ -320,7 +320,7 @@ jobs:
               run: rustup target add aarch64-linux-android arm-linux-androideabi armv7-linux-androideabi i686-linux-android x86_64-linux-android
             - name: install dinghy
               if: matrix.version == '1.68.0'
-              run: cargo install cargo-dinghy --force --version 0.6.5
+              run: cargo install cargo-dinghy --force --version 0.6.5 --locked
             - name: install dinghy
               if: matrix.version != '1.68.0'
               run: cargo install cargo-dinghy --force
