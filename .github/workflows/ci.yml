@@ -9,22 +9,25 @@ jobs:
                 prefix: [pc_test_target_tier1]
             fail-fast: false
         runs-on: ${{ matrix.os }}
+        env:
+            CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
+            RUSTC_FORCE_INCREMENTAL: 1
         steps:
             - uses: actions/checkout@v3
             - uses: ./.github/actions/install_rust_by_version
             - uses: ./.github/actions/cache_cargo
             - name: build
               run: |
-                  CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build
-                  CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --release
+                  cargo build
+                  cargo build --release
             - name: build linux
               if: matrix.os == 'ubuntu-latest'
               run: |
                   target=("aarch64-unknown-linux-gnu" "i686-unknown-linux-gnu" "x86_64-unknown-linux-gnu")
                   for v in "${target[@]}"; do
                     rustup target add ${v}
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --target ${v}
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --target ${v} --release
+                    cargo build --target ${v}
+                    cargo build --target ${v} --release
                   done
             - name: build macos
               if: matrix.os == 'macos-latest'
@@ -32,8 +35,8 @@ jobs:
                   target=("x86_64-apple-darwin")
                   for v in "${target[@]}"; do
                     rustup target add ${v}
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --target ${v}
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --target ${v} --release
+                    cargo build --target ${v}
+                    cargo build --target ${v} --release
                   done
             - name: build windows
               if: matrix.os == 'windows-latest'
@@ -41,8 +44,8 @@ jobs:
                   $target = @("i686-pc-windows-gnu", "i686-pc-windows-msvc", "x86_64-pc-windows-gnu", "x86_64-pc-windows-msvc")
                   foreach ($v in $target) {
                       rustup target add $v
-                      CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --target ${v}
-                      CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --target ${v} --release
+                      cargo build --target ${v}
+                      cargo build --target ${v} --release
                   }
             - uses: ./.github/actions/rm_cache_cargo
 
@@ -54,6 +57,9 @@ jobs:
                 prefix: [pc_test_target_tier1]
             fail-fast: false
         runs-on: ${{ matrix.os }}
+        env:
+            CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
+            RUSTC_FORCE_INCREMENTAL: 1
         needs: build_cache_pc_tier1
         steps:
             - uses: actions/checkout@v3
@@ -75,6 +81,7 @@ jobs:
             fail-fast: false
         runs-on: ${{ matrix.os }}
         env:
+            CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
             RUSTC_FORCE_INCREMENTAL: 1
         needs: build_cache_pc_tier1
         steps:
@@ -86,14 +93,14 @@ jobs:
               run: rustup component add clippy-preview
             - name: clippy
               run: |
-                  CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo clippy --all-targets --all-features -- -D warnings
+                  cargo clippy --all-targets --all-features -- -D warnings
             - name: clippy linux
               if: matrix.os == 'ubuntu-latest'
               run: |
                   target=("aarch64-unknown-linux-gnu" "i686-unknown-linux-gnu" "x86_64-unknown-linux-gnu")
                   for v in "${target[@]}"; do
                     rustup target add ${v}
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo clippy --target ${v} --all-targets --all-features -- -D warnings
+                    cargo clippy --target ${v} --all-targets --all-features -- -D warnings
                   done
             - name: clippy macos
               if: matrix.os == 'macos-latest'
@@ -101,7 +108,7 @@ jobs:
                   target=("x86_64-apple-darwin")
                   for v in "${target[@]}"; do
                     rustup target add ${v}
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo clippy --target ${v} --all-targets --all-features -- -D warnings
+                    cargo clippy --target ${v} --all-targets --all-features -- -D warnings
                   done
             - name: clippy windows
               if: matrix.os == 'windows-latest'
@@ -109,7 +116,7 @@ jobs:
                   $target = @("i686-pc-windows-gnu", "i686-pc-windows-msvc", "x86_64-pc-windows-gnu", "x86_64-pc-windows-msvc")
                   foreach ($v in $target) {
                       rustup target add $v
-                      CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo clippy --target ${v} --all-targets --all-features -- -D warnings
+                      cargo clippy --target ${v} --all-targets --all-features -- -D warnings
                   }
             - uses: ./.github/actions/rm_cache_cargo
 
@@ -121,6 +128,9 @@ jobs:
                 prefix: [pc_test]
             fail-fast: false
         runs-on: ${{ matrix.os }}
+        env:
+            CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
+            RUSTC_FORCE_INCREMENTAL: 1
         needs: build_cache_pc_tier1
         steps:
             - uses: actions/checkout@v3
@@ -128,8 +138,8 @@ jobs:
             - uses: ./.github/actions/cache_cargo
             - name: test
               run: |
-                  CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo test --all -- --nocapture
-                  CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo test --all --release -- --nocapture
+                  cargo test --all -- --nocapture
+                  cargo test --all --release -- --nocapture
             - name: test linux aarch64
               if: matrix.os == 'ubuntu-latest'
               # && matrix.version != '1.68.0'
@@ -144,8 +154,8 @@ jobs:
                       apt-get install -y -q curl gcc
                       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${{ matrix.version }} --profile minimal
                       source "$HOME/.cargo/env"
-                      CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo test --all --target aarch64-unknown-linux-gnu -- --nocapture
-                      CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo test --all --target aarch64-unknown-linux-gnu --release -- --nocapture
+                      cargo test --all --target aarch64-unknown-linux-gnu -- --nocapture
+                      cargo test --all --target aarch64-unknown-linux-gnu --release -- --nocapture
             - name: test linux i686
               if: matrix.os == 'ubuntu-latest'
               # until merged https://github.com/uraimo/run-on-arch-action/pull/94
@@ -158,8 +168,8 @@ jobs:
                       apt-get install -q -y curl gcc
                       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${{ matrix.version }} --profile minimal
                       source "$HOME/.cargo/env"
-                      CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo test --all --target i686-unknown-linux-gnu -- --nocapture
-                      CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo test --all --target i686-unknown-linux-gnu --release -- --nocapture
+                      cargo test --all --target i686-unknown-linux-gnu -- --nocapture
+                      cargo test --all --target i686-unknown-linux-gnu --release -- --nocapture
             - name: test linux
               if: matrix.os == 'ubuntu-latest'
               # cargo test can only real platform
@@ -167,8 +177,8 @@ jobs:
                   target=("x86_64-unknown-linux-gnu")
                   for v in "${target[@]}"; do
                     rustup target add ${v}
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo test --all --target ${v} -- --nocapture
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo test --all --release --target ${v} -- --nocapture
+                    cargo test --all --target ${v} -- --nocapture
+                    cargo test --all --release --target ${v} -- --nocapture
                   done
             - name: test macos
               if: matrix.os == 'macos-latest'
@@ -176,8 +186,8 @@ jobs:
                   target=("x86_64-apple-darwin")
                   for v in "${target[@]}"; do
                     rustup target add ${v}
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo test --all --target ${v} -- --nocapture
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo test --all --release --target ${v} -- --nocapture
+                    cargo test --all --target ${v} -- --nocapture
+                    cargo test --all --release --target ${v} -- --nocapture
                   done
             - name: test windows
               if: matrix.os == 'windows-latest'
@@ -185,8 +195,8 @@ jobs:
                   $target = @("i686-pc-windows-gnu", "i686-pc-windows-msvc", "x86_64-pc-windows-gnu", "x86_64-pc-windows-msvc")
                   foreach ($v in $target) {
                       rustup target add $v
-                      CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo test --all --target $v -- --nocapture
-                      CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo test --all --release --target $v -- --nocapture
+                      cargo test --all --target $v -- --nocapture
+                      cargo test --all --release --target $v -- --nocapture
                   }
             - uses: ./.github/actions/rm_cache_cargo
 
@@ -198,6 +208,9 @@ jobs:
                 prefix: [pc_test_target_tier2]
             fail-fast: false
         runs-on: ${{ matrix.os }}
+        env:
+            CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
+            RUSTC_FORCE_INCREMENTAL: 1
         steps:
             - uses: actions/checkout@v3
             - uses: ./.github/actions/install_rust_by_version
@@ -210,23 +223,23 @@ jobs:
                   target=("aarch64-unknown-linux-musl" "arm-unknown-linux-gnueabi" "arm-unknown-linux-gnueabihf" "armv7-unknown-linux-gnueabihf" "powerpc-unknown-linux-gnu" "powerpc64-unknown-linux-gnu" "powerpc64le-unknown-linux-gnu" "riscv64gc-unknown-linux-gnu" "s390x-unknown-linux-gnu" "x86_64-unknown-freebsd" "x86_64-unknown-illumos" "x86_64-unknown-linux-musl" "x86_64-unknown-netbsd")
                   for v in "${target[@]}"; do
                     rustup target add ${v}
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --target ${v}
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --target ${v} --release
+                    cargo build --target ${v}
+                    cargo build --target ${v} --release
                   done
             - name: build linux loongarch64
               if: matrix.os == 'ubuntu-latest' && matrix.version != '1.68.0'
               run: |
                   rustup target add loongarch64-unknown-linux-gnu
-                  CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --target loongarch64-unknown-linux-gnu
-                  CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --target loongarch64-unknown-linux-gnu --release
+                  cargo build --target loongarch64-unknown-linux-gnu
+                  cargo build --target loongarch64-unknown-linux-gnu --release
             - name: build macos
               if: matrix.os == 'macos-latest'
               run: |
                   target=("aarch64-apple-darwin")
                   for v in "${target[@]}"; do
                     rustup target add ${v}
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --target ${v}
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --target ${v} --release
+                    cargo build --target ${v}
+                    cargo build --target ${v} --release
                   done
             - name: build windows
               if: matrix.os == 'windows-latest'
@@ -234,8 +247,8 @@ jobs:
                   $target = @("aarch64-pc-windows-msvc")
                   foreach ($v in $target) {
                       rustup target add $v
-                      CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --target ${v}
-                      CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --target ${v} --release
+                      cargo build --target ${v}
+                      cargo build --target ${v} --release
                   }
             - uses: ./.github/actions/rm_cache_cargo
 
@@ -247,6 +260,9 @@ jobs:
                 prefix: [android_test]
             fail-fast: false
         runs-on: ${{ matrix.os }}
+        env:
+            CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
+            RUSTC_FORCE_INCREMENTAL: 1
         steps:
             - uses: actions/checkout@v3
               with:
@@ -258,11 +274,11 @@ jobs:
                   target=("aarch64-linux-android" "arm-linux-androideabi" "armv7-linux-androideabi" "i686-linux-android" "x86_64-linux-android")
                   for v in "${target[@]}"; do
                     rustup target add ${v}
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --target ${v}
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --target ${v} --release
+                    cargo build --target ${v}
+                    cargo build --target ${v} --release
                   done
             - name: build
-              run: CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build
+              run: cargo build
             - uses: ./.github/actions/rm_cache_cargo
 
     clippy_android:
@@ -274,6 +290,7 @@ jobs:
             fail-fast: false
         runs-on: ${{ matrix.os }}
         env:
+            CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
             RUSTC_FORCE_INCREMENTAL: 1
         needs: build_cache_android
         steps:
@@ -285,13 +302,13 @@ jobs:
               run: rustup component add clippy-preview
             - name: clippy
               run: |
-                  CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo clippy --all-targets --all-features -- -D warnings
+                  cargo clippy --all-targets --all-features -- -D warnings
             - name: clippy linux
               run: |
                   target=("aarch64-linux-android" "arm-linux-androideabi" "armv7-linux-androideabi" "i686-linux-android" "x86_64-linux-android")
                   for v in "${target[@]}"; do
                     rustup target add ${v}
-                    CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo clippy --target ${v} --all-targets --all-features -- -D warnings
+                    cargo clippy --target ${v} --all-targets --all-features -- -D warnings
                   done
             - uses: ./.github/actions/rm_cache_cargo
 
@@ -325,6 +342,7 @@ jobs:
             fail-fast: false
         runs-on: ${{ matrix.os }}
         env:
+            CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
             RUSTC_FORCE_INCREMENTAL: 1
         needs: build_cache_android
         steps:
@@ -341,10 +359,10 @@ jobs:
               run: rustup target add aarch64-linux-android arm-linux-androideabi armv7-linux-androideabi i686-linux-android x86_64-linux-android
             - name: install dinghy
               if: matrix.version == '1.68.0'
-              run: CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo install cargo-dinghy --force --version 0.6.5 --locked
+              run: cargo install cargo-dinghy --force --version 0.6.5 --locked
             - name: install dinghy
               if: matrix.version != '1.68.0'
-              run: CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo install cargo-dinghy --force
+              run: cargo install cargo-dinghy --force
             - uses: ./.github/actions/cache_cargo
             - name: start android emulator
               uses: ReactiveCircus/android-emulator-runner@v2

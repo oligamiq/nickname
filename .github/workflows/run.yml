@@ -8,6 +8,9 @@ jobs:
                 version: [1.68.0, stable, beta, nightly]
                 prefix: [pc_run]
         runs-on: ${{ matrix.os }}
+        env:
+            CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
+            RUSTC_FORCE_INCREMENTAL: 1
         steps:
             - uses: actions/checkout@v3
               with:
@@ -17,17 +20,17 @@ jobs:
             - name: run windows release
               if: matrix.os == 'windows-latest'
               run: |
-                  CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --release
-                  CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo run --release > ${{ matrix.os }}-${{ matrix.version }}-release-run.log
-                  CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build
-                  CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo run > ${{ matrix.os }}-${{ matrix.version }}-debug-run.log
+                  cargo build --release
+                  cargo run --release > ${{ matrix.os }}-${{ matrix.version }}-release-run.log
+                  cargo build
+                  cargo run > ${{ matrix.os }}-${{ matrix.version }}-debug-run.log
               working-directory: ./examples/pc
             - name: run release
               if: matrix.os != 'windows-latest'
               run: |
-                  CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build --release
+                  cargo build --release
                   sudo target/release/pc > ${{ matrix.os }}-${{ matrix.version }}-release-run.log
-                  CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo build
+                  cargo build
                   sudo target/debug/pc > ${{ matrix.os }}-${{ matrix.version }}-debug-run.log
               working-directory: ./examples/pc
             - name: Upload log release on run
