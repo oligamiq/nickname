@@ -73,7 +73,7 @@ jobs:
             - name: install rust android
               run: cargo install cargo-apk
             - name: logcat
-              run: adb logcat RustStdoutStderr:D '*:S' > cargo-apk-${{ matrix.api-level }}.log &
+              run: adb logcat RustStdoutStderr:D '*:S' > android-${{ matrix.api-level }}-run.log &
             - name: start android emulator
               uses: ReactiveCircus/android-emulator-runner@v2
               if: ${{ matrix.api-level != 33 }}
