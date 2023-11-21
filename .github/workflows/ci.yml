@@ -147,7 +147,7 @@ jobs:
                       cargo test --all --target aarch64-unknown-linux-gnu --release -- --nocapture
             - name: test linux i686
               if: matrix.os == 'ubuntu-latest'
-              # while merged https://github.com/uraimo/run-on-arch-action/pull/94
+              # until merged https://github.com/uraimo/run-on-arch-action/pull/94
               uses: lalten/run-on-arch-action@amd64-support
               with:
                   arch: i686
@@ -318,6 +318,8 @@ jobs:
             - uses: ./.github/actions/install_rust_by_version
             - name: install rust_android_ndk
               run: rustup target add aarch64-linux-android arm-linux-androideabi armv7-linux-androideabi i686-linux-android x86_64-linux-android
+            - name: install dinghy
+              run: cargo install cargo-dinghy --force
             - uses: ./.github/actions/cache_cargo
             - name: start android emulator
               uses: ReactiveCircus/android-emulator-runner@v2
@@ -334,8 +336,7 @@ jobs:
                   sdcard-path-or-size: "1000M"
                   disable-animations: false
                   script: |
-
-                  working-directory: ./examples/android/
+                      cargo dinghy --platform auto-android-x86_64 test
             - name: start android emulator on google_apis for android 33
               uses: ReactiveCircus/android-emulator-runner@v2
               env:
@@ -351,8 +352,8 @@ jobs:
                   disk-size: "14G"
                   sdcard-path-or-size: "4096M"
                   disable-animations: false
-                  script: bash ../../workflow/android/run.sh
-                  working-directory: ./examples/android/
+                  script: |
+                      cargo dinghy --platform auto-android-x86_64 test
             - uses: ./.github/actions/rm_cache_cargo
 # https://zenn.dev/naokifujita/articles/c890954165c21f
 # https://github.com/actix/actix-web/blob/master/.github/workflows/ci.yml
