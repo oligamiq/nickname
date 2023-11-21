@@ -304,9 +304,21 @@ jobs:
                 prefix: [android_test]
                 include:
                     - os: macos-latest
-                      version: [1.68.0, stable, beta, nightly]
+                      version: 1.68.0
                       api-level: 33
-                      prefix: [android_test]
+                      prefix: android_test
+                    - os: macos-latest
+                      version: stable
+                      api-level: 33
+                      prefix: android_test
+                    - os: macos-latest
+                      version: beta
+                      api-level: 33
+                      prefix: android_test
+                    - os: macos-latest
+                      version: nightly
+                      api-level: 33
+                      prefix: android_test
                 exclude:
                     - os: ubuntu-latest
                       api-level: 33
