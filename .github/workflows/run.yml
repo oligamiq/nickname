@@ -84,7 +84,7 @@ jobs:
                   profile: pixel_2
                   ram-size: "4096M"
                   disk-size: "14G"
-                  disable-animations: false
+                  disable-animations: true
                   script: bash ../../workflow/android/run.sh
                   working-directory: ./examples/android/
               continue-on-error: true
@@ -99,7 +99,7 @@ jobs:
                   heap-size: "512M"
                   ram-size: "4096M"
                   disk-size: "14G"
-                  disable-animations: false
+                  disable-animations: true
                   script: bash ../../workflow/android/run.sh
                   working-directory: ./examples/android/
               continue-on-error: true
