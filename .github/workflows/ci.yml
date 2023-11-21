@@ -154,8 +154,8 @@ jobs:
                       apt-get install -y -q curl gcc
                       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${{ matrix.version }} --profile minimal
                       source "$HOME/.cargo/env"
-                      cargo test --all --target aarch64-unknown-linux-gnu -- --nocapture
-                      cargo test --all --target aarch64-unknown-linux-gnu --release -- --nocapture
+                      CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo test --all --target aarch64-unknown-linux-gnu -- --nocapture
+                      CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo test --all --target aarch64-unknown-linux-gnu --release -- --nocapture
             - name: test linux i686
               if: matrix.os == 'ubuntu-latest'
               # until merged https://github.com/uraimo/run-on-arch-action/pull/94
@@ -168,8 +168,8 @@ jobs:
                       apt-get install -q -y curl gcc
                       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${{ matrix.version }} --profile minimal
                       source "$HOME/.cargo/env"
-                      cargo test --all --target i686-unknown-linux-gnu -- --nocapture
-                      cargo test --all --target i686-unknown-linux-gnu --release -- --nocapture
+                      CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo test --all --target i686-unknown-linux-gnu -- --nocapture
+                      CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse cargo test --all --target i686-unknown-linux-gnu --release -- --nocapture
             - name: test linux
               if: matrix.os == 'ubuntu-latest'
               # cargo test can only real platform
