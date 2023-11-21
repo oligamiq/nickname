@@ -143,10 +143,9 @@ jobs:
                   #       --volume "${PWD}/:/app/"
                   run: |
                       apt-get update -q -y
-                      apt-get install -y curl
+                      apt-get install -y curl gcc
                       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain ${{ matrix.version }} --profile minimal
                       apt-get remove -y curl
-                      apt-get --no-install-recommends install -y -q gcc
                       apt-get autoremove -y
                       apt-get clean -y
                       source "$HOME/.cargo/env"
@@ -390,3 +389,4 @@ jobs:
             - uses: ./.github/actions/rm_cache_cargo
 # https://zenn.dev/naokifujita/articles/c890954165c21f
 # https://github.com/actix/actix-web/blob/master/.github/workflows/ci.yml
+# https://github.com/rust-lang/cargo/issues/10781
