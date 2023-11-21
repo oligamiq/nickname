@@ -127,7 +127,7 @@ jobs:
                   cargo test --all -- --nocapture
                   cargo test --all --release -- --nocapture
             - name: test linux aarch64
-              if: matrix.os == 'ubuntu-latest'
+              if: matrix.os == 'ubuntu-latest' && matrix.version != '1.68.0'
               uses: uraimo/run-on-arch-action@v2
               with:
                   arch: aarch64
