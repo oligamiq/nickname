@@ -135,17 +135,15 @@ jobs:
                   distro: ubuntu_latest
                   # Not required, but speeds up builds by reusing the cache from the previous job
                   # githubToken: ${{ github.token }}
-                  dockerRunArgs: |
-                      --volume "${PWD}/:/app/"
-                  install: |
+                  #   dockerRunArgs: |
+                  #       --volume "${PWD}/:/app/"
+                  run: |
                       apt-get update -q -y
                       apt-get install -q -y curl gcc
                       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
                       source "$HOME/.cargo/env"
                       rustup default ${{ matrix.version }}
                       rustup target add aarch64-unknown-linux-gnu
-                  run: |
-                      cd /app
                       source "$HOME/.cargo/env"
                       cargo test --all --target aarch64-unknown-linux-gnu -- --nocapture
                       cargo test --all --target aarch64-unknown-linux-gnu --release -- --nocapture
@@ -156,18 +154,13 @@ jobs:
               with:
                   arch: i686
                   distro: ubuntu_latest
-                  dockerRunArgs: |
-                      --volume "${PWD}/:/app/"
-                  install: |
+                  run: |
                       apt-get update -q -y
                       apt-get install -q -y curl gcc
                       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
                       source "$HOME/.cargo/env"
                       rustup default ${{ matrix.version }}
                       rustup target add i686-unknown-linux-gnu
-                  run: |
-                      cd /app
-                      source "$HOME/.cargo/env"
                       $HOME/.cargo/bin/cargo test --all --target i686-unknown-linux-gnu -- --nocapture
                       $HOME/.cargo/bin/cargo test --all --target i686-unknown-linux-gnu --release -- --nocapture
             - name: test linux
@@ -309,6 +302,12 @@ jobs:
                 version: [1.68.0, stable, beta, nightly]
                 api-level: [24, 30, 33]
                 prefix: [android_test]
+                include:
+                    - os: macos-latest
+                      api-level: 33
+                exclude:
+                    - os: ubuntu-latest
+                      api-level: 33
         runs-on: ${{ matrix.os }}
         env:
             RUSTC_FORCE_INCREMENTAL: 1
