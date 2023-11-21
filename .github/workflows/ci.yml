@@ -126,33 +126,47 @@ jobs:
               run: |
                   cargo test --all -- --nocapture
                   cargo test --all --release -- --nocapture
-            - name: test linux
+            - name: test linux aarch64
               if: matrix.os == 'ubuntu-latest'
               uses: uraimo/run-on-arch-action@v2
-              id: build
               with:
                   arch: aarch64
                   distro: ubuntu_latest
-
                   # Not required, but speeds up builds by reusing the cache from the previous job
                   # githubToken: ${{ github.token }}
-
                   install: |
                       apt-get update -q -y
                       apt-get install -q -y curl gcc
                       curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
                       source "$HOME/.cargo/env"
+                      rustup default ${{ matrix.version }}
                       rustup target add aarch64-unknown-linux-gnu
-
                   run: |
                       source "$HOME/.cargo/env"
                       cargo test --all --target aarch64-unknown-linux-gnu -- --nocapture
                       cargo test --all --target aarch64-unknown-linux-gnu --release -- --nocapture
+            - name: test linux aarch64
+              if: matrix.os == 'ubuntu-latest'
+              uses: uraimo/run-on-arch-action@v2
+              with:
+                  arch: i686
+                  distro: ubuntu_latest
+                  install: |
+                      apt-get update -q -y
+                      apt-get install -q -y curl gcc
+                      curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+                      source "$HOME/.cargo/env"
+                      rustup default ${{ matrix.version }}
+                      rustup target add i686-unknown-linux-gnu
+                  run: |
+                      source "$HOME/.cargo/env"
+                      cargo test --all --target i686-unknown-linux-gnu -- --nocapture
+                      cargo test --all --target i686-unknown-linux-gnu --release -- --nocapture
             - name: test linux
               if: matrix.os == 'ubuntu-latest'
               # cargo test can only real platform
               run: |
-                  target=("i686-unknown-linux-gnu" "x86_64-unknown-linux-gnu")
+                  target=("x86_64-unknown-linux-gnu")
                   for v in "${target[@]}"; do
                     rustup target add ${v}
                     cargo test --all --target ${v} -- --nocapture
@@ -252,6 +266,35 @@ jobs:
             - uses: ./.github/actions/rm_cache_cargo
 
     clippy_android:
+        strategy:
+            matrix:
+                os: [ubuntu-latest]
+                version: [1.68.0, stable, beta, nightly]
+                prefix: [android_test]
+        runs-on: ${{ matrix.os }}
+        env:
+            RUSTC_FORCE_INCREMENTAL: 1
+        needs: build_cache_android
+        steps:
+            - uses: actions/checkout@v3
+            - run: rustup component add clippy
+            - uses: ./.github/actions/install_rust_by_version
+            - uses: ./.github/actions/cache_cargo
+            - name: install clippy
+              run: rustup component add clippy-preview
+            - name: clippy
+              run: |
+                  cargo clippy --all-targets --all-features -- -D warnings
+            - name: clippy linux
+              run: |
+                  target=("aarch64-linux-android" "arm-linux-androideabi" "armv7-linux-androideabi" "i686-linux-android" "x86_64-linux-android")
+                  for v in "${target[@]}"; do
+                    rustup target add ${v}
+                    cargo clippy --target ${v} --all-targets --all-features -- -D warnings
+                  done
+            - uses: ./.github/actions/rm_cache_cargo
+
+    test_android:
         strategy:
             matrix:
                 os: [ubuntu-latest]
