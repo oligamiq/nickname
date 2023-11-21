@@ -166,7 +166,7 @@ jobs:
                     rustup target add ${v}
                     cargo test --all --target ${v} -- --nocapture
                     cargo test --all --release --target ${v} -- --nocapture
-                  done- name: test windows
+                  done
             - name: test windows
               if: matrix.os == 'windows-latest'
               run: |

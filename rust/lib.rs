@@ -7,6 +7,9 @@ cfg_if! {
     } else if #[cfg(target_os = "ios")] {
         mod iphone;
         pub use iphone::*;
+    } else if #[cfg(target_os = "macos")] {
+        mod macos;
+        pub use macos::*;
     } else if #[cfg(any(unix, target_os = "redox"))] {
         mod linux;
         pub use linux::*;
