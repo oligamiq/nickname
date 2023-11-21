@@ -315,30 +315,34 @@ jobs:
     test_android:
         strategy:
             matrix:
+                # os: [ubuntu-latest]
+                # version: [1.68.0, stable, beta, nightly]
+                # api-level: [24, 30, 33]
+                # prefix: [android_test]
+                # include:
+                #     - os: macos-latest
+                #       version: 1.68.0
+                #       api-level: 33
+                #       prefix: android_test
+                #     - os: macos-latest
+                #       version: stable
+                #       api-level: 33
+                #       prefix: android_test
+                #     - os: macos-latest
+                #       version: beta
+                #       api-level: 33
+                #       prefix: android_test
+                #     - os: macos-latest
+                #       version: nightly
+                #       api-level: 33
+                #       prefix: android_test
+                # exclude:
+                #     - os: ubuntu-latest
+                #       api-level: 33
                 os: [ubuntu-latest]
                 version: [1.68.0, stable, beta, nightly]
                 api-level: [24, 30, 33]
                 prefix: [android_test]
-                include:
-                    - os: macos-latest
-                      version: 1.68.0
-                      api-level: 33
-                      prefix: android_test
-                    - os: macos-latest
-                      version: stable
-                      api-level: 33
-                      prefix: android_test
-                    - os: macos-latest
-                      version: beta
-                      api-level: 33
-                      prefix: android_test
-                    - os: macos-latest
-                      version: nightly
-                      api-level: 33
-                      prefix: android_test
-                exclude:
-                    - os: ubuntu-latest
-                      api-level: 33
             fail-fast: false
         runs-on: ${{ matrix.os }}
         env:
