@@ -17,8 +17,8 @@ runs:
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
           target/
-        key: ${{ runner.os }}-${{ runner.version }}-${{ runner.prefix }}-${{ runner.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: ${{ runner.os }}-${{ runner.version }}-${{ runner.prefix }}-${{ runner.target }}-cargo-
+        key: ${{ runner.os }}-${{ runner.version }}-${{ runner.prefix }}-${{ runner.target }}-${{ runner.api-level }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: ${{ runner.os }}-${{ runner.version }}-${{ runner.prefix }}-${{ runner.target }}-${{ runner.api-level }}-cargo-
     - name: Cache cargo registry pc-run
       uses: actions/cache@v3
       with:
@@ -28,8 +28,8 @@ runs:
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
           examples/pc/target/
-        key: ${{ runner.os }}-${{ runner.version }}-${{ runner.prefix }}-${{ runner.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: ${{ runner.os }}-${{ runner.version }}-${{ runner.prefix }}-${{ runner.target }}-cargo-
+        key: ${{ runner.os }}-${{ runner.version }}-${{ runner.prefix }}-${{ runner.target }}-${{ runner.api-level }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: ${{ runner.os }}-${{ runner.version }}-${{ runner.prefix }}-${{ runner.target }}-${{ runner.api-level }}-cargo-
 
 # https://zenn.dev/naokifujita/articles/c890954165c21f
 # https://zenn.dev/kt3k/articles/d557cc874961ab

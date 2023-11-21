@@ -23,7 +23,7 @@ jobs:
               run: cargo install cargo-apk
             - name: logcat
               run: adb logcat RustStdoutStderr:D '*:S' > cargo-apk-${{ matrix.api-level }}.log &
-            - name: create instrumentation coverage
+            - name: start android emulator
               uses: ReactiveCircus/android-emulator-runner@v2
               env:
                   GRADLE_OPTS: "-Dorg.gradle.internal.http.connectionTimeout=60000 -Dorg.gradle.internal.http.socketTimeout=60000 -Dorg.gradle.internal.network.retry.max.attempts=6 -Dorg.gradle.internal.network.retry.initial.backOff=2000"
@@ -40,7 +40,7 @@ jobs:
                   script: bash ../../workflow/android/run.sh
                   working-directory: ./examples/android/
               continue-on-error: true
-            - name: create instrumentation coverage on google_apis for android 33
+            - name: start android emulator on google_apis for android 33
               uses: ReactiveCircus/android-emulator-runner@v2
               env:
                   GRADLE_OPTS: "-Dorg.gradle.internal.http.connectionTimeout=60000 -Dorg.gradle.internal.http.socketTimeout=60000 -Dorg.gradle.internal.network.retry.max.attempts=6 -Dorg.gradle.internal.network.retry.initial.backOff=2000"
