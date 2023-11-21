@@ -45,6 +45,67 @@ jobs:
                   path: ./examples/pc/${{ matrix.os }}-${{ matrix.version }}-debug-run.log
             - uses: ./.github/actions/rm_cache_cargo
 
+    run_android:
+        name: test
+        strategy:
+            matrix:
+                api-level: [24, 30, 33]
+            fail-fast: false
+        # https://github.com/ReactiveCircus/android-emulator-runner/issues/46#issuecomment-1474555282
+        # https://github.com/ReactiveCircus/android-emulator-runner/issues/15
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  fetch-depth: 1
+            - name: Set up JDK 11
+              uses: actions/setup-java@v3
+              with:
+                  distribution: temurin
+                  java-version: 11
+            - name: install target
+              run: rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android arm-linux-androideabi
+            - name: install rust android
+              run: cargo install cargo-apk
+            - name: logcat
+              run: adb logcat RustStdoutStderr:D '*:S' > cargo-apk-${{ matrix.api-level }}.log &
+            - name: start android emulator
+              uses: ReactiveCircus/android-emulator-runner@v2
+              if: ${{ matrix.api-level != 33 }}
+              with:
+                  api-level: ${{ matrix.api-level }}
+                  target: default
+                  arch: x86_64
+                  profile: pixel_2
+                  ram-size: "4096M"
+                  disk-size: "14G"
+                  sdcard-path-or-size: "1000M"
+                  disable-animations: false
+                  script: bash ../../workflow/android/run.sh
+                  working-directory: ./examples/android/
+              continue-on-error: true
+            - name: start android emulator on google_apis for android 33
+              uses: ReactiveCircus/android-emulator-runner@v2
+              if: ${{ matrix.api-level == 33 }}
+              with:
+                  api-level: ${{ matrix.api-level }}
+                  target: google_apis
+                  arch: x86_64
+                  profile: pixel_2
+                  heap-size: "512M"
+                  ram-size: "4096M"
+                  disk-size: "14G"
+                  sdcard-path-or-size: "4096M"
+                  disable-animations: false
+                  script: bash ../../workflow/android/run.sh
+                  working-directory: ./examples/android/
+              continue-on-error: true
+            - name: Upload log on cargo-apk
+              uses: actions/upload-artifact@v1
+              with:
+                  name: run-log
+                  path: android-${{ matrix.api-level }}-run.log
+
     concat_logs:
         runs-on: ubuntu-latest
         needs: [run_pc]
@@ -66,14 +127,25 @@ jobs:
                   for o in "${os[@]}"; do
                     for r in "${release[@]}"; do
                       for v in "${version[@]}"; do
-                        log="artifacts/${o}-${v}-${r}-run.log"
+                        log="artifacts/${o}-${v}-run.log"
                         echo "==================== ${o}-${v}-${r} ====================" >> all-logs.txt
                         cat "$log" >> all-logs.txt
                       done
                     done
+                  done
+
+                  api=("24" "30" "33")
+                  for v in "${version[@]}"; do
+                    log="artifacts/android-${v}-run.log"
+                    echo "==================== android-${v} ====================" >> all-logs.txt
+                    cat "$log" >> all-logs.txt
                   done
             - name: Upload concatenated log
               uses: actions/upload-artifact@v3
               with:
                   name: run-log
                   path: all-logs.txt
+# https://zenn.dev/takeyaqa/articles/github-actions-appium-android-emulator
+# https://stackoverflow.com/questions/3152681/android-emulator-5554-offline
+
+# https://github.com/kiwix/kiwix-android/blob/develop/.github/workflows/ci.yml
