@@ -59,54 +59,11 @@ impl NickName {
         let nickname: String = nickname.into();
         let nickname = std::ffi::OsStr::new(&nickname);
 
-        #[cfg(not(any(
-            target_os = "dragonfly",
-            target_os = "freebsd",
-            target_os = "ios",
-            target_os = "macos",
-            target_os = "solarish",
-            target_os = "illumos",
-        )))]
-        #[allow(non_camel_case_types)]
-        type nickname_len_t = libc::size_t;
-
-        #[cfg(any(
-            target_os = "dragonfly",
-            target_os = "freebsd",
-            target_os = "ios",
-            target_os = "macos",
-            target_os = "solarish",
-            target_os = "illumos",
-        ))]
-        #[allow(non_camel_case_types)]
-        type nickname_len_t = libc::c_int;
-
-        #[cfg(not(any(
-            target_os = "dragonfly",
-            target_os = "freebsd",
-            target_os = "ios",
-            target_os = "macos",
-            target_os = "solarish",
-            target_os = "illumos",
-        )))]
-        #[allow(clippy::absurd_extreme_comparisons)]
-        if nickname.len() > nickname_len_t::MAX {
+        if nickname.len() > libc::c_int::MAX as usize {
             return Err(std::io::Error::new(std::io::ErrorKind::Other, "nickname too long").into());
         }
 
-        #[cfg(any(
-            target_os = "dragonfly",
-            target_os = "freebsd",
-            target_os = "ios",
-            target_os = "macos",
-            target_os = "solarish",
-            target_os = "illumos",
-        ))]
-        if nickname.len() > nickname_len_t::MAX as usize {
-            return Err(std::io::Error::new(std::io::ErrorKind::Other, "nickname too long").into());
-        }
-
-        let size = nickname.len() as nickname_len_t;
+        let size = nickname.len() as libc::c_int;
 
         let result =
             unsafe { libc::sethostname(nickname.as_bytes().as_ptr() as *const libc::c_char, size) };
