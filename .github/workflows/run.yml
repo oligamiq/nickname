@@ -46,14 +46,10 @@ jobs:
             - uses: ./.github/actions/rm_cache_cargo
 
     run_android:
-        name: test
         strategy:
             matrix:
                 os: [ubuntu-latest]
-                api-level: [24, 30]
-                include:
-                    - os: macos-latest
-                      api-level: 33
+                api-level: [24, 30, 33]
                 prefix: [android_run]
             fail-fast: false
         # https://github.com/ReactiveCircus/android-emulator-runner/issues/46#issuecomment-1474555282
