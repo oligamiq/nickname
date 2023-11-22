@@ -14,10 +14,11 @@ jobs:
             - name: Install stable rust toolchain
               uses: actions-rs/toolchain@v1
               with:
-                  profile: default
+                  profile: minimal
                   toolchain: nightly
                   target: aarch64-apple-ios-sim
                   override: true
+            - run: rustup target add x86_64-apple-ios
             - name: install rust iphone
               run: cargo install cargo-bundle --git https://github.com/burtonageo/cargo-bundle.git
             - name: Install cargo-dinghy
