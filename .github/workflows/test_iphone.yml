@@ -4,6 +4,7 @@ jobs:
     dinghy:
         runs-on: macos-latest
         steps:
+            - uses: actions/checkout@v3
             - name: Install stable rust toolchain
               uses: actions-rs/toolchain@v1
               with:
@@ -27,6 +28,7 @@ jobs:
     bundle:
         runs-on: macos-latest
         steps:
+            - uses: actions/checkout@v3
             - name: Install stable rust toolchain
               uses: actions-rs/toolchain@v1
               with:
