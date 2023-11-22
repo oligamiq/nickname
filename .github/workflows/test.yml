@@ -6,6 +6,4 @@ jobs:
         steps:
             - run: git clone https://github.com/michaelwu/RustKit
               continue-on-error: true
-            - uses: lhotari/action-upterm@dev
-              with:
-                  limit-access-to-actor: true
+            - uses: lhotari/action-upterm@v1
