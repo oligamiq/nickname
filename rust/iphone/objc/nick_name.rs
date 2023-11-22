@@ -19,10 +19,11 @@ impl Debug for NickName {
 }
 
 // https://developer.apple.com/documentation/uikit/uidevice
+// https://simlay.net/uikit-sys/master/src/uikit_sys/Users/simlay/projects/uikit-sys/target/x86_64-apple-ios/debug/build/uikit-sys-344536fd54f83e27/out/uikit.rs.html#98727
 impl NickName {
     pub fn new() -> crate::Result<Self> {
         Ok(Self(Arc::new(RwLock::new(unsafe {
-            msg_send_id![class!(UIDevice), new]
+            msg_send_id![class!(UIDevice), alloc]
         }))))
     }
 
