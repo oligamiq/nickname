@@ -10,7 +10,7 @@ jobs:
               with:
                   profile: minimal
                   toolchain: stable
-                  target: aarch64-apple-ios-sim
+                  target: x86_64-apple-ios
                   override: true
             # - name: install target
             #   run: rustup target add aarch64-apple-ios x86_64-apple-ios aarch64-apple-ios-sim
@@ -47,8 +47,9 @@ jobs:
               working-directory: /tmp/iphone/
             - name: start simulator
               uses: futureware-tech/simulator-action@v3
+              # https://github.com/futureware-tech/simulator-action/wiki/Devices-macos-latest
               with:
-                  model: "iPhone 10"
+                  model: "iPhone 11"
             - name: drive
               run: |
                   ls -al target/aarch64-apple-ios-sim/debug/bundle/ios/nickname-ios-test-app.app
