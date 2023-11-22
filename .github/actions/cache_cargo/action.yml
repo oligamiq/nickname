@@ -35,13 +35,13 @@ runs:
 jobs:
   post:
     - name: Clear the cargo caches powershell
-      if: ${{ runner.os == 'windows-latest' }}
+      if: runner.os == 'windows-latest'
       shell: powershell
       run: |
         cargo install cargo-cache --no-default-features --features ci-autoclean --force --debug
         cargo-cache
     - name: Clear the cargo caches bash
-      if: ${{ runner.os != 'windows-latest' }}
+      if: runner.os != 'windows-latest'
       shell: bash
       run: |
         cargo install cargo-cache --no-default-features --features ci-autoclean --force --debug
