@@ -1,5 +1,5 @@
 [package]
-name = "nickname-ios-test-app"
+name = "nickname-ios-test"
 version = "0.1.0"
 edition = "2021"
 description = "A simple iPhone app"
@@ -13,8 +13,4 @@ cacao = { version = "0.3", features = [
 ], default-features = false }
 
 [package.metadata.bundle]
-name = "nickname-ios-test-app"
 identifier = "com.oligami.nickname-ios-test"
-category = "Developer Tool"
-short_description = "An example iOS app."
-long_description = "An example iOS app."
