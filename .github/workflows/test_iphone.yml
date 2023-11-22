@@ -41,10 +41,10 @@ jobs:
             - name: install rust iphone
               run: cargo binstall -q --no-confirm --force cargo-bundle
             - name: copy target dir
-              run: cp -r ./examples/iphone .
+              run: cp -r ./examples/iphone /tmp/
             - name: build
               run: cargo bundle --format ios
-              working-directory: ./iphone/
+              working-directory: /tmp/iphone/
             - name: start simulator
               uses: futureware-tech/simulator-action@v3
               with:
@@ -53,5 +53,5 @@ jobs:
               run: |
                   xcrun simctl install booted target/x86_64-apple-ios/debug/bundle/ios/nickname-ios-test-app.app
                   xcrun simctl launch --console booted com.oligami.nickname-ios-test
-              working-directory: ./iphone/
+              working-directory: /tmp/iphone/
 # https://github.com/simlay/uikit-sys/blob/master/.github/workflows/rust.yml
