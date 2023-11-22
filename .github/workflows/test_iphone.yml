@@ -43,7 +43,7 @@ jobs:
             - name: copy target dir
               run: cp -r ./examples/iphone /tmp/
             - name: build
-              run: cargo bundle --format ios
+              run: cargo bundle --format ios --target x86_64-apple-ios
               working-directory: /tmp/iphone/
             - name: start simulator
               uses: futureware-tech/simulator-action@v3
