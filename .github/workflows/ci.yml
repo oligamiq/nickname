@@ -356,10 +356,16 @@ jobs:
               run: rustup target add x86_64-linux-android
             - name: install dinghy
               if: matrix.version == '1.68.0'
-              run: cargo binstall --no-confirm --force --pkg-url="https://github.com/sonos/dinghy/releases/download/0.6.5/cargo-dinghy-linux-0.6.5.tgz" cargo-dinghy@0.6.5
-            - name: install dinghy
-              if: matrix.version != '1.68.0'
-              run: cargo binstall --no-confirm --force cargo-dinghy
+              run: |
+                  if [ ${{matrix.version}} == "1.68.0" ]; then
+                    if [ ${{matrix.os}} == "macos-latest" ]; then
+                      cargo binstall --no-confirm --force --pkg-url="https://github.com/sonos/dinghy/releases/download/0.6.5/cargo-dinghy-linux-0.6.5.tgz" cargo-dinghy@0.6.5
+                    else
+                      cargo binstall --no-confirm --force --pkg-url="https://github.com/sonos/dinghy/releases/download/0.6.5/cargo-dinghy-macos-0.6.5.tgz" cargo-dinghy@0.6.5
+                    fi
+                  else
+                     cargo binstall --no-confirm --force cargo-dinghy
+                  fi
             - uses: ./.github/actions/cache_cargo
             - name: start android emulator
               uses: ReactiveCircus/android-emulator-runner@v2
