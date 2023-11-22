@@ -48,9 +48,10 @@ jobs:
             - name: start simulator
               uses: futureware-tech/simulator-action@v3
               with:
-                  model: "iPhone 8"
+                  model: "iPhone 10"
             - name: drive
               run: |
+                  ls -al target/aarch64-apple-ios-sim/debug/bundle/ios/nickname-ios-test-app.app
                   xcrun simctl install booted target/aarch64-apple-ios-sim/debug/bundle/ios/nickname-ios-test-app.app
                   xcrun simctl launch --console booted com.oligami.nickname-ios-test
               working-directory: /tmp/iphone/
