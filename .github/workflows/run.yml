@@ -135,31 +135,11 @@ jobs:
                   path: artifacts
             - name: Concatenate logs
               run: |
-                  os=("ubuntu-latest" "macos-latest" "windows-latest")
-                  version=("1.68.0" "stable" "beta" "nightly")
-                  release=("release" "debug")
-
-                  ls -la artifacts
-
+                  directory="run-log"
                   echo "" > all-logs.txt
-                  for o in "${os[@]}"; do
-                    for r in "${release[@]}"; do
-                      for v in "${version[@]}"; do
-                        log="artifacts/${o}-${v}-${r}-run.log"
-                        echo "==================== ${o}-${v}-${r} ====================" >> all-logs.txt
-                        cat "$log" >> all-logs.txt
-                      done
-                    done
-                  done
-
-                  api=("24" "30" "33")
-                  for v in "${version[@]}"; do
-                    log="artifacts/android-${v}-run.log"
-                    echo "==================== android-${v} ====================" >> all-logs.txt
-                    cat "$log" >> all-logs.txt
-                    log="artifacts/android-dinghy-${v}-run.log"
-                    echo "==================== android-${v} ====================" >> all-logs.txt
-                    cat "$log" >> all-logs.txt
+                  for file in "$directory"/*; do
+                    echo "================ ${file} ================" >> all-logs.txt
+                    cat "$file" >> all-logs.txt
                   done
             - name: Upload concatenated log
               uses: actions/upload-artifact@v3
