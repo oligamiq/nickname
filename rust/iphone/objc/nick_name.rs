@@ -23,7 +23,7 @@ impl Debug for NickName {
 impl NickName {
     pub fn new() -> crate::Result<Self> {
         Ok(Self(Arc::new(RwLock::new(unsafe {
-            msg_send_id![class!(UIDevice), alloc]
+            msg_send_id![class!(UIDevice), new]
         }))))
     }
 
