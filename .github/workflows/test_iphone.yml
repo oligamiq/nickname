@@ -21,7 +21,7 @@ jobs:
             - run: rustup target add x86_64-apple-ios
             - uses: cargo-bins/cargo-binstall@main
             - name: install rust iphone
-              run: cargo binstall --no-confirm --force cargo-bundle
+              run: cargo binstall -q --no-confirm --force cargo-bundle
             - name: Install cargo-dinghy
               uses: baptiste0928/cargo-install@v2
               with:

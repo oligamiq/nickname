@@ -65,7 +65,7 @@ jobs:
               run: rustup target add x86_64-linux-android
             - uses: cargo-bins/cargo-binstall@main
             - name: install rust android
-              run: cargo binstall --no-confirm --force cargo-apk
+              run: cargo binstall -q --no-confirm --force cargo-apk
             - name: logcat
               run: adb logcat RustStdoutStderr:D '*:S' > android-${{ matrix.api-level }}-run.log &
             - name: start android emulator

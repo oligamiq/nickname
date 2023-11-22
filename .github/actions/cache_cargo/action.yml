@@ -5,6 +5,7 @@ runs:
 
   steps:
     # Fix timestamps
+    - uses: cargo-bins/cargo-binstall@mains
     - name: restore timestamps
       uses: chetan/git-restore-mtime-action@v2
     - name: Cache cargo registry pc-test
@@ -30,6 +31,21 @@ runs:
           examples/pc/target/
         key: ${{ runner.os }}-${{ runner.version }}-${{ runner.prefix }}-${{ runner.target }}-${{ runner.api-level }}-cargo-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: ${{ runner.os }}-${{ runner.version }}-${{ runner.prefix }}-${{ runner.target }}-${{ runner.api-level }}-cargo-
+
+  post:
+    - name: Clear the cargo caches powershell
+      if: ${{ matrix.os == 'windows-latest' }}
+      shell: powershell
+      run: |
+        cargo install cargo-cache --no-default-features --features ci-autoclean --force --debug
+        cargo-cache
+    - name: Clear the cargo caches bash
+      if: ${{ matrix.os != 'windows-latest' }}
+      shell: bash
+      run: |
+        cargo install cargo-cache --no-default-features --features ci-autoclean --force --debug
+        cargo-cache
+
 
 # https://zenn.dev/naokifujita/articles/c890954165c21f
 # https://zenn.dev/kt3k/articles/d557cc874961ab
