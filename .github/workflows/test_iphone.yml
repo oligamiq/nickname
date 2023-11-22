@@ -16,7 +16,7 @@ jobs:
               with:
                   profile: default
                   toolchain: nightly
-                  target: x86_64-apple-ios
+                  target: aarch64-apple-ios-sim
                   override: true
             - name: install rust iphone
               run: cargo install cargo-bundle --git https://github.com/burtonageo/cargo-bundle.git
@@ -25,17 +25,14 @@ jobs:
               with:
                   crate: cargo-dinghy
             - name: pre build
-              run: cargo build --target x86_64-apple-ios
+              run: cargo build --target aarch64-apple-ios-sim
               working-directory: ./examples/iphone/
             - name: build
-              run: CARGO_BUNDLE_SKIP_BUILD=1 cargo bundle --format ios --target x86_64-apple-ios
+              run: cargo bundle --format ios
               working-directory: ./examples/iphone/
               continue-on-error: true
             - name: install tree
               run: brew install tree
-            - name: tree
-              run: tree target
-              working-directory: ./examples/iphone/
             - name: start simulator
               uses: futureware-tech/simulator-action@v3
               with:
@@ -49,6 +46,12 @@ jobs:
             - name: Dinghy test
               run: |
                   cargo dinghy --platform auto-ios-x86_64 test
+            - name: tree
+              run: tree target
+              working-directory: ./examples/iphone/
+            - name: tree
+              run: tree target
+              working-directory: ./
             - name: cat devices
               run: |
                   xcrun simctl list devices
