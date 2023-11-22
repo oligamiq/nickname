@@ -24,7 +24,7 @@ jobs:
                   cargo run --release > ${{ matrix.os }}-${{ matrix.version }}-release-run.log
                   cargo build
                   cargo run > ${{ matrix.os }}-${{ matrix.version }}-debug-run.log
-              working-directory: ./examples/pc
+              working-directory: ./examples/common
             - name: run release
               if: matrix.os != 'windows-latest'
               run: |
@@ -32,17 +32,17 @@ jobs:
                   sudo target/release/pc > ${{ matrix.os }}-${{ matrix.version }}-release-run.log
                   cargo build
                   sudo target/debug/pc > ${{ matrix.os }}-${{ matrix.version }}-debug-run.log
-              working-directory: ./examples/pc
+              working-directory: ./examples/common
             - name: Upload log release on run
               uses: actions/upload-artifact@v3
               with:
                   name: run-log
-                  path: ./examples/pc/${{ matrix.os }}-${{ matrix.version }}-release-run.log
+                  path: ./examples/common/${{ matrix.os }}-${{ matrix.version }}-release-run.log
             - name: Upload log on run
               uses: actions/upload-artifact@v3
               with:
                   name: run-log
-                  path: ./examples/pc/${{ matrix.os }}-${{ matrix.version }}-debug-run.log
+                  path: ./examples/common/${{ matrix.os }}-${{ matrix.version }}-debug-run.log
             - uses: ./.github/actions/rm_cache_cargo
 
     run_android:
@@ -116,12 +116,12 @@ jobs:
                       cargo dinghy --platform auto-android-x86_64 run > android-dinghy-${{ matrix.api-level }}-run.log
                       cargo dinghy --platform auto-android-x86_64 build --release
                       cargo dinghy --platform auto-android-x86_64 run --release > android-dinghy-${{ matrix.api-level }}-run.log
-                  working-directory: ./examples/pc/
+                  working-directory: ./examples/common/
             - name: Upload log on cargo-apk
               uses: actions/upload-artifact@v3
               with:
                   name: run-log
-                  path: ./examples/pc/android-dinghy-${{ matrix.api-level }}-run.log
+                  path: ./examples/common/android-dinghy-${{ matrix.api-level }}-run.log
 
     concat_logs:
         runs-on: ubuntu-latest
