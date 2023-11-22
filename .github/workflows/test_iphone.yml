@@ -38,7 +38,7 @@ jobs:
             - name: install rust iphone
               run: cargo binstall -q --no-confirm --force cargo-bundle
             - name: copy target dir
-              run: cp -r ./examples/iphone/ .
+              run: cp -r ./examples/iphone .
             - name: build
               run: cargo bundle --format ios
               working-directory: ./iphone/
