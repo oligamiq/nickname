@@ -18,8 +18,8 @@ jobs:
                   toolchain: nightly
                   target: x86_64-apple-ios
                   override: true
-            # - name: install rust iphone
-            #   run: cargo install cargo-bundle --git https://github.com/burtonageo/cargo-bundle.git
+            - name: install rust iphone
+              run: cargo install cargo-bundle --git https://github.com/burtonageo/cargo-bundle.git
             - name: Install cargo-dinghy
               uses: baptiste0928/cargo-install@v2
               with:
