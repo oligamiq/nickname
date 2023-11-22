@@ -19,8 +19,9 @@ jobs:
                   target: aarch64-apple-ios-sim
                   override: true
             - run: rustup target add x86_64-apple-ios
+            - uses: cargo-bins/cargo-binstall@main
             - name: install rust iphone
-              run: cargo install cargo-bundle --git https://github.com/burtonageo/cargo-bundle.git
+              run: cargo binstall --no-confirm --force cargo-bundle
             - name: Install cargo-dinghy
               uses: baptiste0928/cargo-install@v2
               with:

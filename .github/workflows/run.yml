@@ -136,7 +136,7 @@ jobs:
                   path: artifacts
             - name: Concatenate logs
               run: |
-                  directory="run-log"
+                  directory="artifacts"
                   echo "" > all-logs.txt
                   for file in "$directory"/*; do
                     echo "================ ${file} ================" >> all-logs.txt
