@@ -1,62 +1,54 @@
 on: [push, pull_request]
 
 jobs:
-    test:
-        name: test
+    dinghy:
         runs-on: macos-latest
         steps:
-            - uses: actions/checkout@v4
-            - uses: maxim-lobanov/setup-xcode@v1
-              with:
-                  xcode-version: latest-stable
-            # - name: install target
-            #   run: rustup target add aarch64-apple-ios x86_64-apple-ios aarch64-apple-ios-sim
             - name: Install stable rust toolchain
               uses: actions-rs/toolchain@v1
               with:
                   profile: minimal
-                  toolchain: nightly
-                  target: aarch64-apple-ios-sim
+                  toolchain: stable
+                  target: x86_64-apple-ios
+                  override: true
+            # - name: install target
+            #   run: rustup target add aarch64-apple-ios x86_64-apple-ios aarch64-apple-ios-sim
+            - uses: cargo-bins/cargo-binstall@main
+            - name: install cargo-dinghy
+              run: cargo binstall -q --no-confirm --force cargo-dinghy
+            - name: start simulator
+              uses: futureware-tech/simulator-action@v3
+              with:
+                  model: "iPhone 8"
+            - name: Dinghy test
+              run: cargo dinghy --platform auto-ios-x86_64 test
+
+    bundle:
+        runs-on: macos-latest
+        steps:
+            - name: Install stable rust toolchain
+              uses: actions-rs/toolchain@v1
+              with:
+                  profile: minimal
+                  toolchain: stable
+                  target: x86_64-apple-ios
                   override: true
             - run: rustup target add x86_64-apple-ios
             - uses: cargo-bins/cargo-binstall@main
             - name: install rust iphone
               run: cargo binstall -q --no-confirm --force cargo-bundle
-            - name: Install cargo-dinghy
-              uses: baptiste0928/cargo-install@v2
-              with:
-                  crate: cargo-dinghy
-            - name: pre build
-              run: cargo build --target aarch64-apple-ios-sim
-              working-directory: ./examples/iphone/
+            - name: copy target dir
+              run: cp -r ./examples/iphone/ .
             - name: build
               run: cargo bundle --format ios
-              working-directory: ./examples/iphone/
-              continue-on-error: true
-            - name: install tree
-              run: brew install tree
+              working-directory: ./iphone/
             - name: start simulator
               uses: futureware-tech/simulator-action@v3
               with:
                   model: "iPhone 8"
-            # - name: drive
-            #   run: |
-            #       xcrun simctl install booted target/x86_64-apple-ios/debug/bundle/ios/nickname-ios-test-app.app
-            #       xcrun simctl launch --console booted com.oligami.nickname-ios-test
-            #   working-directory: ./examples/iphone/
-
-            - name: Dinghy test
+            - name: drive
               run: |
-                  cargo dinghy --platform auto-ios-x86_64 test
-            - name: tree
-              run: tree target
-              working-directory: ./examples/iphone/
-            - name: tree
-              run: tree target
-              working-directory: ./
-            - name: cat devices
-              run: |
-                  xcrun simctl list devices
-                  cargo dinghy devices
-
+                  xcrun simctl install booted target/x86_64-apple-ios/debug/bundle/ios/nickname-ios-test-app.app
+                  xcrun simctl launch --console booted com.oligami.nickname-ios-test
+              working-directory: ./iphone/
 # https://github.com/simlay/uikit-sys/blob/master/.github/workflows/rust.yml

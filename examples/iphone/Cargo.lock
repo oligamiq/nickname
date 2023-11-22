@@ -163,7 +163,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "nickname-ios-test"
+name = "nickname-ios-test-app"
 version = "0.1.0"
 dependencies = [
  "cacao",
