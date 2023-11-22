@@ -43,7 +43,6 @@ jobs:
               with:
                   name: run-log
                   path: ./examples/common/${{ matrix.os }}-${{ matrix.version }}-debug-run.log
-            - uses: ./.github/actions/rm_cache_cargo
 
     run_android:
         strategy:
