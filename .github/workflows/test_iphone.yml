@@ -22,6 +22,7 @@ jobs:
                   model: "iPhone 8"
             - name: Dinghy test
               run: cargo dinghy --platform auto-ios-x86_64 test
+              working-directory: ./examples/iphone/
 
     bundle:
         runs-on: macos-latest
