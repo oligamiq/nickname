@@ -15,7 +15,7 @@ jobs:
               uses: actions-rs/toolchain@v1
               with:
                   profile: default
-                  toolchain: stable
+                  toolchain: nightly
                   target: x86_64-apple-ios
                   override: true
             # - name: install rust iphone
@@ -49,5 +49,9 @@ jobs:
             - name: Dinghy test
               run: |
                   cargo dinghy --platform auto-ios-x86_64 test
+            - name: cat devices
+              run: |
+                  xcrun simctl list devices
+                  cargo dinghy devices
 
 # https://github.com/simlay/uikit-sys/blob/master/.github/workflows/rust.yml
