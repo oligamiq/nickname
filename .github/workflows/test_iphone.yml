@@ -34,16 +34,16 @@ jobs:
               with:
                   profile: minimal
                   toolchain: stable
-                  target: aarch64-apple-ios-sim
+                  target: x86_64-apple-ios
                   override: true
-            - run: rustup target add aarch64-apple-ios-sim
+            - run: rustup target add x86_64-apple-ios
             - uses: cargo-bins/cargo-binstall@main
             - name: install rust iphone
               run: cargo binstall -q --no-confirm --force cargo-bundle
             - name: copy target dir
               run: cp -r ./examples/iphone /tmp/
             - name: build
-              run: cargo bundle --format ios --target aarch64-apple-ios-sim --release
+              run: cargo bundle --format ios --target x86_64-apple-ios --release
               working-directory: /tmp/iphone/
             - name: start simulator
               uses: futureware-tech/simulator-action@v3
@@ -52,9 +52,9 @@ jobs:
                   model: "iPhone 11"
             - name: drive
               run: |
-                  ls -al target/aarch64-apple-ios-sim/release/bundle/ios/nickname-ios-test-app.app
-                  cat target/aarch64-apple-ios-sim/release/bundle/ios/nickname-ios-test-app.app/Info.plist
-                  xcrun simctl install booted target/aarch64-apple-ios-sim/release/bundle/ios/nickname-ios-test-app.app
+                  ls -al target/x86_64-apple-ios/release/bundle/ios/nickname-ios-test-app.app
+                  cat target/x86_64-apple-ios/release/bundle/ios/nickname-ios-test-app.app/Info.plist
+                  xcrun simctl install booted target/x86_64-apple-ios/release/bundle/ios/nickname-ios-test-app.app
                   xcrun simctl launch --console booted com.oligami.nickname-ios-test
               working-directory: /tmp/iphone/
 # https://github.com/simlay/uikit-sys/blob/master/.github/workflows/rust.yml
