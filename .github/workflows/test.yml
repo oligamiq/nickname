@@ -11,4 +11,4 @@ jobs:
               uses: lhotari/action-upterm@v1
               with:
                   ## limits ssh access and adds the ssh public key for the user which triggered the workflow
-                  limit-access-to-actor: false
+                  limit-access-to-actor: true
