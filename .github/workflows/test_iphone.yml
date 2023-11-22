@@ -10,7 +10,7 @@ jobs:
               with:
                   profile: minimal
                   toolchain: stable
-                  target: x86_64-apple-ios
+                  target: aarch64-apple-ios-sim
                   override: true
             # - name: install target
             #   run: rustup target add aarch64-apple-ios x86_64-apple-ios aarch64-apple-ios-sim
@@ -34,16 +34,16 @@ jobs:
               with:
                   profile: minimal
                   toolchain: stable
-                  target: x86_64-apple-ios
+                  target: aarch64-apple-ios-sim
                   override: true
-            - run: rustup target add x86_64-apple-ios
+            - run: rustup target add aarch64-apple-ios-sim
             - uses: cargo-bins/cargo-binstall@main
             - name: install rust iphone
               run: cargo binstall -q --no-confirm --force cargo-bundle
             - name: copy target dir
               run: cp -r ./examples/iphone /tmp/
             - name: build
-              run: cargo bundle --format ios --target x86_64-apple-ios
+              run: cargo bundle --format ios --target aarch64-apple-ios-sim
               working-directory: /tmp/iphone/
             - name: start simulator
               uses: futureware-tech/simulator-action@v3
@@ -51,7 +51,7 @@ jobs:
                   model: "iPhone 8"
             - name: drive
               run: |
-                  xcrun simctl install booted target/x86_64-apple-ios/debug/bundle/ios/nickname-ios-test-app.app
+                  xcrun simctl install booted target/aarch64-apple-ios-sim/debug/bundle/ios/nickname-ios-test-app.app
                   xcrun simctl launch --console booted com.oligami.nickname-ios-test
               working-directory: /tmp/iphone/
 # https://github.com/simlay/uikit-sys/blob/master/.github/workflows/rust.yml
