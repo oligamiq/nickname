@@ -43,7 +43,8 @@ jobs:
             - name: move target dir
               run: |
                   cp -r ./examples/iphone /tmp/
-                  cp -r . /tmp/
+                  ls -al /tmp/
+                  cp -r ../. /tmp/
                   ls -al /tmp/
                   cd /tmp/iphone/
                   sed -i.bak 's|path = "../../"|path = "../nick-name"|' Cargo.toml
