@@ -27,7 +27,7 @@ impl NickName {
         println!("NickName::new()");
 
         Ok(Self(Arc::new(RwLock::new(unsafe {
-            msg_send![class!(UIDevice), alloc]
+            msg_send![class!(UIDevice222), alloc]
         }))))
     }
 
