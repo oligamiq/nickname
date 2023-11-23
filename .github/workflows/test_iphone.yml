@@ -55,6 +55,7 @@ jobs:
               # https://github.com/futureware-tech/simulator-action/wiki/Devices-macos-latest
               with:
                   model: "iPhone 11"
+                  shutdown_after_job: false
             - name: pre drive
               run: |
                   ls -al target/x86_64-apple-ios/release/bundle/ios/nickname-ios-test-app.app
