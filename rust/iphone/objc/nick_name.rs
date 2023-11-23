@@ -9,8 +9,9 @@ use objc::rc::Id;
 use objc::runtime::NSObject;
 use objc::{class, msg_send, msg_send_id, ClassType};
 
+#[repr(transparent)]
 #[derive(Clone)]
-pub struct NickName(pub Arc<RwLock<Id<NSObject>>>);
+pub struct NickName(pub Arc<RwLock<super::id>>);
 
 impl Debug for NickName {
     fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
@@ -22,8 +23,10 @@ impl Debug for NickName {
 // https://simlay.net/uikit-sys/master/src/uikit_sys/Users/simlay/projects/uikit-sys/target/x86_64-apple-ios/debug/build/uikit-sys-344536fd54f83e27/out/uikit.rs.html#98727
 impl NickName {
     pub fn new() -> crate::Result<Self> {
+        println!("NickName::new()");
+
         Ok(Self(Arc::new(RwLock::new(unsafe {
-            msg_send_id![class!(UIDevice), new]
+            msg_send![class!(UIDevice), alloc]
         }))))
     }
 
