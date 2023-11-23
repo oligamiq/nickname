@@ -40,8 +40,11 @@ jobs:
             - uses: cargo-bins/cargo-binstall@main
             - name: install rust iphone
               run: cargo binstall -q --no-confirm --force cargo-bundle
-            - name: copy target dir
-              run: cp -r ./examples/iphone /tmp/
+            - name: move target dir
+              run: |
+                  cp -r ./examples/iphone /tmp/
+                  cp -r ./* /tmp/nick-name/
+                  sed -i.bak 's|path = "../../"|path = "../nick-name"|' Cargo.toml
             - name: build
               run: cargo bundle --format ios --target x86_64-apple-ios --release
               working-directory: /tmp/iphone/
