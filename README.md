@@ -1,8 +1,9 @@
 # Supported platforms
-- POSIX-compliant systems
-(Linux, macOS, Android, FreeBSD, OpenBSD, NetBSD, Solaris, Redox, and so on)
+- linux systems
+(Linux, FreeBSD, OpenBSD, NetBSD, Solaris, Redox, and so on)
 - Windows
 - Android
+- iPhone 
 
 # cannot support platform yet
 - wasi
@@ -10,25 +11,31 @@ https://github.com/WebAssembly/wasi-libc/issues/196
 - wasm
 
 # function
-## android
+## Android
 - get
+
+## iPhone
 
 ## Windows, Linux, Mac
 - get
 - set
 
-# rust target
+# Rust target
 https://doc.rust-lang.org/nightly/rustc/platform-support.html
 
 # build
 look README.md on example
+https://github.com/nziq53/nickname/tree/main/examples/common
 
 # next
-## android
+## Android
 get nickname from bluetooth
 
+## Macos
+use native api
+
 # extension function
-## android
+## Android
 - finish
 call finishAndRemoveTask()
 - get_device_api_level

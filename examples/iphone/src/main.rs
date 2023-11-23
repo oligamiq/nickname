@@ -20,6 +20,7 @@ impl AppDelegate for TestApp {
         SceneConfig::new("Default Configuration", session.role())
     }
 }
+
 pub struct RootView {
     pub green: View,
     pub blue: View,
@@ -39,6 +40,9 @@ impl ViewDelegate for RootView {
 
     fn did_load(&mut self, _view: View) {
         LayoutConstraint::activate(&[]);
+        std::thread::spawn(|| {
+            launch_handle();
+        });
     }
 }
 
@@ -66,6 +70,16 @@ impl WindowSceneDelegate for WindowScene {
             *vc = Some(root_view_controller);
         }
     }
+}
+
+fn launch_handle() {
+    println!("start");
+
+    if let Ok(device_name) = nick_name::NickName::new() {
+        println!("{:?}", device_name.get());
+    };
+
+    println!("__finish__");
 }
 
 fn main() {
