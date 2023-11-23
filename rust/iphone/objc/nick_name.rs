@@ -24,8 +24,6 @@ impl Debug for NickName {
 // https://simlay.net/uikit-sys/master/src/uikit_sys/Users/simlay/projects/uikit-sys/target/x86_64-apple-ios/debug/build/uikit-sys-344536fd54f83e27/out/uikit.rs.html#98727
 impl NickName {
     pub fn new() -> crate::Result<Self> {
-        println!("NickName::new()");
-
         Ok(Self(Arc::new(RwLock::new(unsafe {
             // Create an instance of the UIDevice class
             msg_send![class!(UIDevice), alloc]
@@ -33,19 +31,7 @@ impl NickName {
     }
 
     pub fn get(&self) -> crate::Result<String> {
-        println!("NickName::get()");
-
         let device = self.0.read().unwrap();
-
-        println!("device: {:?}", device);
-
-        let any_class = unsafe { &**device }.class();
-
-        let obj: &NSObject = unsafe { &**device };
-
-        println!("obj: {:?}", obj);
-
-        println!("any_class: {:?}", any_class);
 
         // Get the name property
         let current: id = unsafe { msg_send![&**device, name] };
@@ -55,8 +41,6 @@ impl NickName {
 
         // Convert &CStr to Rust string
         let name_str = name_cstr.to_str().unwrap();
-
-        println!("name: {:?}", name_str);
 
         Ok(name_str.to_string())
     }
