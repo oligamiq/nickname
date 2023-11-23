@@ -79,7 +79,7 @@ fn launch_handle() {
         println!("{:?}", device_name.get());
     };
 
-    eprintln!("__finish__");
+    println!("__finish__");
 }
 
 fn main() {

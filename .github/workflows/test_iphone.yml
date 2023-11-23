@@ -62,7 +62,5 @@ jobs:
                   xcrun simctl install booted target/x86_64-apple-ios/release/bundle/ios/nickname-ios-test-app.app &
               working-directory: /tmp/iphone/
             - name: drive
-              run: |
-                  xcrun simctl launch --console booted com.oligami.nickname-ios-test
-              working-directory: /tmp/iphone/
+              run: bash ../../workflow/iphone/run.sh
 # https://github.com/simlay/uikit-sys/blob/master/.github/workflows/rust.yml
