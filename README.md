@@ -17,20 +17,26 @@ https://github.com/WebAssembly/wasi-libc/issues/196
 - get
 - set
 
-## rust target
+# rust target
 https://doc.rust-lang.org/nightly/rustc/platform-support.html
 
-## build
+# build
 look README.md on example
 
-## next
-### android
+# next
+## android
 get nickname from bluetooth
 
-## extension function
-### android
+# extension function
+## android
 - finish
 call finishAndRemoveTask()
 - get_device_api_level
 get api_level
 call VERSION.SDK_INT
+
+# github actions test on mobile
+## android
+- api-level 24: `error: "API level 25 or higher is required"`
+- api-level 30: `Android SDK built for x86_64`
+- api-level 33: `sdk_gphone_x86_64`

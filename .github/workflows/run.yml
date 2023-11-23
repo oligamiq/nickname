@@ -1,0 +1,152 @@
+on: [push, pull_request]
+
+jobs:
+    run_pc:
+        strategy:
+            matrix:
+                os: [ubuntu-latest, macos-latest, windows-latest]
+                version: [1.68.0, stable, beta, nightly]
+                prefix: [pc_run]
+        runs-on: ${{ matrix.os }}
+        env:
+            CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
+            RUSTC_FORCE_INCREMENTAL: 1
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+            - uses: ./.github/actions/install_rust_by_version
+            - uses: ./.github/actions/cache_cargo
+            - name: run windows release
+              if: matrix.os == 'windows-latest'
+              run: |
+                  cargo build --release
+                  cargo run --release > ${{ matrix.os }}-${{ matrix.version }}-release-run.log
+                  cargo build
+                  cargo run > ${{ matrix.os }}-${{ matrix.version }}-debug-run.log
+              working-directory: ./examples/common
+            - name: run release
+              if: matrix.os != 'windows-latest'
+              run: |
+                  cargo build --release
+                  sudo target/release/pc > ${{ matrix.os }}-${{ matrix.version }}-release-run.log
+                  cargo build
+                  sudo target/debug/pc > ${{ matrix.os }}-${{ matrix.version }}-debug-run.log
+              working-directory: ./examples/common
+            - name: Upload log release on run
+              uses: actions/upload-artifact@v3
+              with:
+                  name: run-log
+                  path: ./examples/common/${{ matrix.os }}-${{ matrix.version }}-release-run.log
+            - name: Upload log on run
+              uses: actions/upload-artifact@v3
+              with:
+                  name: run-log
+                  path: ./examples/common/${{ matrix.os }}-${{ matrix.version }}-debug-run.log
+
+    run_android:
+        strategy:
+            matrix:
+                os: [ubuntu-latest]
+                api-level: [24, 30, 33]
+                prefix: [android_run]
+            fail-fast: false
+        # https://github.com/ReactiveCircus/android-emulator-runner/issues/46#issuecomment-1474555282
+        # https://github.com/ReactiveCircus/android-emulator-runner/issues/15
+        runs-on: ${{ matrix.os }}
+        env:
+            CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
+            RUSTC_FORCE_INCREMENTAL: 1
+        steps:
+            - uses: actions/checkout@v3
+            - name: install target
+              # run: rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android arm-linux-androideabi
+              run: rustup target add x86_64-linux-android
+            - uses: cargo-bins/cargo-binstall@main
+            - name: install rust android
+              run: cargo binstall -q --no-confirm --force cargo-apk
+            - name: logcat
+              run: adb logcat RustStdoutStderr:D '*:S' > android-${{ matrix.api-level }}-run.log &
+            - name: start android emulator
+              uses: ReactiveCircus/android-emulator-runner@v2
+              with:
+                  api-level: ${{ matrix.api-level }}
+                  target: default
+                  arch: x86_64
+                  profile: pixel_2
+                  emulator-boot-timeout: 900
+                  script: bash ../../workflow/android/run.sh
+                  working-directory: ./examples/android/
+            - name: Upload log on cargo-apk
+              uses: actions/upload-artifact@v3
+              with:
+                  name: run-log
+                  path: android-${{ matrix.api-level }}-run.log
+
+    # not initialize ndk_context
+    # run_android_dinghy:
+    #     strategy:
+    #         matrix:
+    #             os: [ubuntu-latest]
+    #             api-level: [24, 30, 33]
+    #             prefix: [android_run]
+    #         fail-fast: false
+    #     # https://github.com/ReactiveCircus/android-emulator-runner/issues/46#issuecomment-1474555282
+    #     # https://github.com/ReactiveCircus/android-emulator-runner/issues/15
+    #     runs-on: ${{ matrix.os }}
+    #     env:
+    #         CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
+    #         RUSTC_FORCE_INCREMENTAL: 1
+    #     steps:
+    #         - uses: actions/checkout@v3
+    #         - name: install target
+    #           # run: rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android arm-linux-androideabi
+    #           run: rustup target add x86_64-linux-android
+    #         - name: install rust android
+    #           run: cargo install cargo-dinghy --force
+    #         - name: start android emulator
+    #           uses: ReactiveCircus/android-emulator-runner@v2
+    #           with:
+    #               api-level: ${{ matrix.api-level }}
+    #               target: default
+    #               arch: x86_64
+    #               profile: pixel_2
+    #               emulator-boot-timeout: 900
+    #               script: |
+    #                   cargo dinghy --platform auto-android-x86_64 build
+    #                   cargo dinghy --platform auto-android-x86_64 run > android-dinghy-${{ matrix.api-level }}-run.log
+    #                   cargo dinghy --platform auto-android-x86_64 build --release
+    #                   cargo dinghy --platform auto-android-x86_64 run --release > android-dinghy-${{ matrix.api-level }}-run.log
+    #               working-directory: ./examples/common/
+    #         - name: Upload log on cargo-apk
+    #           uses: actions/upload-artifact@v3
+    #           with:
+    #               name: run-log
+    #               path: ./examples/common/android-dinghy-${{ matrix.api-level }}-run.log
+
+    concat_logs:
+        runs-on: ubuntu-latest
+        needs: [run_pc, run_android]
+        steps:
+            - name: Download artifacts on run
+              uses: actions/download-artifact@v3
+              with:
+                  name: run-log
+                  path: artifacts
+            - name: Concatenate logs
+              run: |
+                  directory="artifacts"
+                  echo "" > all-logs.txt
+                  for file in "$directory"/*; do
+                    echo "================ ${file} ================" >> all-logs.txt
+                    cat "$file" >> all-logs.txt
+                  done
+            - name: Upload concatenated log
+              uses: actions/upload-artifact@v3
+              with:
+                  name: run-log
+                  path: all-logs.txt
+# https://zenn.dev/takeyaqa/articles/github-actions-appium-android-emulator
+# https://stackoverflow.com/questions/3152681/android-emulator-5554-offline
+
+# https://github.com/kiwix/kiwix-android/blob/develop/.github/workflows/ci.yml

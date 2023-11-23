@@ -5,10 +5,12 @@ runs:
 
   steps:
     # Fix timestamps
+    - uses: cargo-bins/cargo-binstall@main
     - name: restore timestamps
       uses: chetan/git-restore-mtime-action@v2
-    - name: Cache cargo registry
-      uses: actions/cache@v2
+    - name: Cache cargo registry pc-test
+      if: runner.prefix == 'pc-test'
+      uses: actions/cache@v3
       with:
         path: |
           ~/.cargo/bin/
@@ -16,8 +18,34 @@ runs:
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
           target/
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: ${{ runner.os }}-cargo-
+        key: ${{ runner.os }}-${{ runner.version }}-${{ runner.prefix }}-${{ runner.target }}-${{ runner.api-level }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: ${{ runner.os }}-${{ runner.version }}-${{ runner.prefix }}-${{ runner.target }}-${{ runner.api-level }}-cargo-
+    - name: Cache cargo registry pc-run
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          examples/pc/target/
+        key: ${{ runner.os }}-${{ runner.version }}-${{ runner.prefix }}-${{ runner.target }}-${{ runner.api-level }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: ${{ runner.os }}-${{ runner.version }}-${{ runner.prefix }}-${{ runner.target }}-${{ runner.api-level }}-cargo-
+
+jobs:
+  post:
+    - name: Clear the cargo caches powershell
+      if: runner.os == 'windows-latest'
+      shell: powershell
+      run: |
+        cargo install cargo-cache --no-default-features --features ci-autoclean --force --debug
+        cargo-cache
+    - name: Clear the cargo caches bash
+      if: runner.os != 'windows-latest'
+      shell: bash
+      run: |
+        cargo install cargo-cache --no-default-features --features ci-autoclean --force --debug
+        cargo-cache
 
 # https://zenn.dev/naokifujita/articles/c890954165c21f
 # https://zenn.dev/kt3k/articles/d557cc874961ab

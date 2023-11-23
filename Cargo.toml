@@ -23,7 +23,7 @@ cfg-if = "1"
 
 [target.'cfg(target_os = "android")'.dependencies]
 jni = "0.21"
-ndk-context = "0.1.1"
+ndk-context = "0.1"
 
 [target.'cfg(target_os = "windows")'.dependencies]
 winapi = { version = "0.3", features = [
@@ -35,9 +35,8 @@ winapi = { version = "0.3", features = [
     "iptypes",
 ] }
 
-[target.'cfg(target_os = "ios")'.dependencies]
-cocoa = "0.25"
-objc = "0.2"
+[target.'cfg(any(target_os = "ios", target_os = "macos"))'.dependencies]
+objc = { version = "0.4.1", package = "objc2" }
 
-[target.'cfg(any(unix, target_os = "redox", target_os = "wasi"))'.dependencies]
+[target.'cfg(any(unix, target_os = "redox", target_os = "macos", target_os = "wasi"))'.dependencies]
 libc = "0.2"

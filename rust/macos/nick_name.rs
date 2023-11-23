@@ -20,6 +20,11 @@ impl NickName {
     }
 
     pub fn get(&self) -> crate::Result<String> {
+        let hostname = self.get_hostname()?;
+        Ok(hostname)
+    }
+
+    pub fn get_hostname(&self) -> crate::Result<String> {
         // ホスト名を格納するバッファのサイズを指定
         // https://pubs.opengroup.org/onlinepubs/9699919799/functions/gethostname.html
         let limit = unsafe { libc::sysconf(libc::_SC_HOST_NAME_MAX) };
@@ -43,59 +48,22 @@ impl NickName {
         }
     }
 
-    // https://github.com/svartalf/hostname/blob/master/src/nix.rs
     pub fn set<S: Into<String>>(&self, nickname: S) -> crate::Result<()> {
+        let nickname: String = nickname.into();
+        self.set_hostname(nickname)?;
+        Ok(())
+    }
+
+    // https://github.com/svartalf/hostname/blob/master/src/nix.rs
+    pub fn set_hostname<S: Into<String>>(&self, nickname: S) -> crate::Result<()> {
         let nickname: String = nickname.into();
         let nickname = std::ffi::OsStr::new(&nickname);
 
-        #[cfg(not(any(
-            target_os = "dragonfly",
-            target_os = "freebsd",
-            target_os = "ios",
-            target_os = "macos",
-            target_os = "solarish",
-            target_os = "illumos",
-        )))]
-        #[allow(non_camel_case_types)]
-        type nickname_len_t = libc::size_t;
-
-        #[cfg(any(
-            target_os = "dragonfly",
-            target_os = "freebsd",
-            target_os = "ios",
-            target_os = "macos",
-            target_os = "solarish",
-            target_os = "illumos",
-        ))]
-        #[allow(non_camel_case_types)]
-        type nickname_len_t = libc::c_int;
-
-        #[cfg(not(any(
-            target_os = "dragonfly",
-            target_os = "freebsd",
-            target_os = "ios",
-            target_os = "macos",
-            target_os = "solarish",
-            target_os = "illumos",
-        )))]
-        #[allow(clippy::absurd_extreme_comparisons)]
-        if nickname.len() > nickname_len_t::MAX {
+        if nickname.len() > libc::c_int::MAX as usize {
             return Err(std::io::Error::new(std::io::ErrorKind::Other, "nickname too long").into());
         }
 
-        #[cfg(any(
-            target_os = "dragonfly",
-            target_os = "freebsd",
-            target_os = "ios",
-            target_os = "macos",
-            target_os = "solarish",
-            target_os = "illumos",
-        ))]
-        if nickname.len() > nickname_len_t::MAX as usize {
-            return Err(std::io::Error::new(std::io::ErrorKind::Other, "nickname too long").into());
-        }
-
-        let size = nickname.len() as nickname_len_t;
+        let size = nickname.len() as libc::c_int;
 
         let result =
             unsafe { libc::sethostname(nickname.as_bytes().as_ptr() as *const libc::c_char, size) };

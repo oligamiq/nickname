@@ -1,0 +1,67 @@
+on: [push, pull_request]
+
+jobs:
+    dinghy:
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Install stable rust toolchain
+              uses: actions-rs/toolchain@v1
+              with:
+                  profile: minimal
+                  toolchain: stable
+                  target: x86_64-apple-ios
+                  override: true
+            # - name: install target
+            #   run: rustup target add aarch64-apple-ios x86_64-apple-ios aarch64-apple-ios-sim
+            - uses: cargo-bins/cargo-binstall@main
+            - name: install cargo-dinghy
+              run: cargo binstall -q --no-confirm --force cargo-dinghy
+            - name: start simulator
+              uses: futureware-tech/simulator-action@v3
+              with:
+                  model: "iPhone 8"
+            - name: Dinghy test
+              run: cargo dinghy --platform auto-ios-x86_64 test
+              working-directory: ./examples/iphone/
+
+    bundle:
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v3
+            - name: Install stable rust toolchain
+              uses: actions-rs/toolchain@v1
+              with:
+                  profile: minimal
+                  toolchain: stable
+                  target: x86_64-apple-ios
+                  override: true
+            - run: rustup target add x86_64-apple-ios
+            - uses: cargo-bins/cargo-binstall@main
+            - name: install rust iphone
+              run: cargo binstall -q --no-confirm --force cargo-bundle
+            - name: move target dir
+              run: |
+                  cp -r ./examples/iphone /tmp/
+                  cp -r ../. /tmp/
+                  ls -al /tmp/
+                  cd /tmp/iphone/
+                  sed -i.bak 's|path = "../../"|path = "../nickname"|' Cargo.toml
+            - name: build
+              run: cargo bundle --format ios --target x86_64-apple-ios --release
+              working-directory: /tmp/iphone/
+            - name: start simulator
+              uses: futureware-tech/simulator-action@v3
+              # https://github.com/futureware-tech/simulator-action/wiki/Devices-macos-latest
+              with:
+                  model: "iPhone 11"
+                  shutdown_after_job: false
+            - name: pre drive
+              run: |
+                  ls -al target/x86_64-apple-ios/release/bundle/ios/nickname-ios-test-app.app
+                  cat target/x86_64-apple-ios/release/bundle/ios/nickname-ios-test-app.app/Info.plist
+                  xcrun simctl install booted target/x86_64-apple-ios/release/bundle/ios/nickname-ios-test-app.app &
+              working-directory: /tmp/iphone/
+            - name: drive
+              run: bash /tmp/nickname/workflow/iphone/run.sh
+# https://github.com/simlay/uikit-sys/blob/master/.github/workflows/rust.yml

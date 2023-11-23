@@ -1,2 +1,2 @@
 mod nick_name;
-pub use nick_name::NickName;
+pub use self::nick_name::NickName;

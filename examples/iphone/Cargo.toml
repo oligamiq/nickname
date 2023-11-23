@@ -1,0 +1,19 @@
+[package]
+name = "nickname-ios-test-app"
+version = "0.1.0"
+edition = "2021"
+description = "A simple iPhone app"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+cacao = { version = "0.4.0-beta2", features = [
+    "uikit",
+    "autolayout",
+], default-features = false }
+
+# this library
+nick-name = { path = "../../" }
+
+[package.metadata.bundle]
+identifier = "com.oligami.nickname-ios-test"

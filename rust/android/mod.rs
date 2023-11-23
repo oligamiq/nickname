@@ -1,8 +1,8 @@
 mod jni;
 
-pub use jni::attach_current_thread;
-pub use jni::init;
-pub use jni::nick_name::NickName;
+pub use self::jni::attach_current_thread;
+pub use self::jni::init;
+pub use self::jni::nick_name::NickName;
 
 use self::jni::global_ctx;
 use self::jni::global_jvm;
