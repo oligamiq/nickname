@@ -27,7 +27,8 @@ impl NickName {
         println!("NickName::new()");
 
         Ok(Self(Arc::new(RwLock::new(unsafe {
-            msg_send![class!(UIDevice222), alloc]
+            // Create an instance of the UIDevice class
+            msg_send![class!(UIDevice), alloc]
         }))))
     }
 
@@ -44,28 +45,19 @@ impl NickName {
 
         println!("obj: {:?}", obj);
 
-        // let cur: NSObject = unsafe { *obj.ivar_ptr("current") };
-
-        // println!("cur: {:?}", cur);
-
         println!("any_class: {:?}", any_class);
 
-        let current: Id<NSObject> = unsafe { msg_send_id![&**device, current] };
+        // Get the name property
+        let current: id = unsafe { msg_send![&**device, name] };
 
-        println!("current: {:?}", current);
+        // Convert the Objective-C string to a Rust string
+        let name_cstr: &CStr = unsafe { CStr::from_ptr(msg_send![current, UTF8String]) };
 
-        let name: *const std::os::raw::c_char = unsafe { msg_send![&**device, name] };
+        // Convert &CStr to Rust string
+        let name_str = name_cstr.to_str().unwrap();
 
-        println!("name: {:?}", name);
+        println!("name: {:?}", name_str);
 
-        let c_str = unsafe { CStr::from_ptr(name) };
-
-        println!("c_str: {:?}", c_str);
-
-        let str_slice: &str = c_str.to_str().unwrap();
-
-        println!("str_slice: {:?}", str_slice);
-
-        Ok(str_slice.to_string())
+        Ok(name_str.to_string())
     }
 }
