@@ -20,6 +20,7 @@ impl AppDelegate for TestApp {
         SceneConfig::new("Default Configuration", session.role())
     }
 }
+
 pub struct RootView {
     pub green: View,
     pub blue: View,
@@ -39,6 +40,9 @@ impl ViewDelegate for RootView {
 
     fn did_load(&mut self, _view: View) {
         LayoutConstraint::activate(&[]);
+        thread::spawn(|| {
+            println!("Hello from a thread!");
+        });
     }
 }
 
