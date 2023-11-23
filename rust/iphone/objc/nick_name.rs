@@ -5,13 +5,14 @@ use std::ffi::CStr;
 use std::fmt::{Debug, Formatter};
 use std::sync::{Arc, RwLock};
 
+use super::id;
 use objc::rc::Id;
-use objc::runtime::NSObject;
+use objc::runtime::{AnyObject, NSObject, Object};
 use objc::{class, msg_send, msg_send_id, ClassType};
 
 #[repr(transparent)]
 #[derive(Clone)]
-pub struct NickName(pub Arc<RwLock<super::id>>);
+pub struct NickName(pub Arc<RwLock<id>>);
 
 impl Debug for NickName {
     fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
@@ -39,9 +40,17 @@ impl NickName {
 
         let any_class = unsafe { &**device }.class();
 
+        let obj: &NSObject = unsafe { &**device };
+
+        println!("obj: {:?}", obj);
+
+        // let cur: NSObject = unsafe { *obj.ivar_ptr("current") };
+
+        // println!("cur: {:?}", cur);
+
         println!("any_class: {:?}", any_class);
 
-        let current = unsafe { msg_send![&**device, current] };
+        let current: Id<NSObject> = unsafe { msg_send_id![&**device, current] };
 
         println!("current: {:?}", current);
 
