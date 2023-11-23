@@ -40,7 +40,7 @@ impl ViewDelegate for RootView {
 
     fn did_load(&mut self, _view: View) {
         LayoutConstraint::activate(&[]);
-        thread::spawn(|| {
+        std::thread::spawn(|| {
             println!("Hello from a thread!");
         });
     }
