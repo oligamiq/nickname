@@ -6,7 +6,6 @@ jobs:
             matrix:
                 os: [macos-latest]
                 version: [1.68.0, stable, beta, nightly]
-                ios: [14.0, 15.0, 16.2]
                 prefix: [test_iphone]
         runs-on: macos-latest
         steps:
@@ -36,7 +35,6 @@ jobs:
               uses: futureware-tech/simulator-action@v3
               with:
                   model: "iPhone 8"
-                  os_version: ${{matrix.ios}}
             - name: Dinghy test
               run: cargo dinghy --platform auto-ios-x86_64 test
               working-directory: ./examples/iphone/
@@ -46,7 +44,6 @@ jobs:
             matrix:
                 os: [macos-latest]
                 version: [1.68.0, stable, beta, nightly]
-                ios: [14.0, 15.0, 16.2]
                 prefix: [test_iphone]
         runs-on: macos-latest
         steps:
@@ -77,7 +74,6 @@ jobs:
               # https://github.com/futureware-tech/simulator-action/wiki/Devices-macos-latest
               with:
                   model: "iPhone 8"
-                  os_version: ${{matrix.ios}}
                   shutdown_after_job: false
             - name: pre drive
               run: |
