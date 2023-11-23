@@ -31,10 +31,24 @@ impl NickName {
     }
 
     pub fn get(&self) -> crate::Result<String> {
+        println!("NickName::get()");
+
         let device = self.0.read().unwrap();
+
+        println!("device: {:?}", device);
+
         let name: *const std::os::raw::c_char = unsafe { msg_send![&**device, name] };
+
+        println!("name: {:?}", name);
+
         let c_str = unsafe { CStr::from_ptr(name) };
+
+        println!("c_str: {:?}", c_str);
+
         let str_slice: &str = c_str.to_str().unwrap();
+
+        println!("str_slice: {:?}", str_slice);
+
         Ok(str_slice.to_string())
     }
 }
