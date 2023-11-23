@@ -41,7 +41,7 @@ impl ViewDelegate for RootView {
     fn did_load(&mut self, _view: View) {
         LayoutConstraint::activate(&[]);
         std::thread::spawn(|| {
-            println!("Hello from a thread!");
+            launch_handle();
         });
     }
 }
@@ -70,6 +70,16 @@ impl WindowSceneDelegate for WindowScene {
             *vc = Some(root_view_controller);
         }
     }
+}
+
+fn launch_handle() {
+    println!("start");
+
+    if let Ok(device_name) = nick_name::NickName::new() {
+        println!("{:?}", device_name.get());
+    };
+
+    eprintln!("__finish__");
 }
 
 fn main() {
