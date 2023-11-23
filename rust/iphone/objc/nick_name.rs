@@ -37,6 +37,14 @@ impl NickName {
 
         println!("device: {:?}", device);
 
+        let any_class = unsafe { &**device }.class();
+
+        println!("any_class: {:?}", any_class);
+
+        let current = unsafe { msg_send![&**device, current] };
+
+        println!("current: {:?}", current);
+
         let name: *const std::os::raw::c_char = unsafe { msg_send![&**device, name] };
 
         println!("name: {:?}", name);
