@@ -43,11 +43,10 @@ jobs:
             - name: move target dir
               run: |
                   cp -r ./examples/iphone /tmp/
-                  ls -al /tmp/
                   cp -r ../. /tmp/
                   ls -al /tmp/
                   cd /tmp/iphone/
-                  sed -i.bak 's|path = "../../"|path = "../nick-name"|' Cargo.toml
+                  sed -i.bak 's|path = "../../"|path = "../nickname"|' Cargo.toml
             - name: build
               run: cargo bundle --format ios --target x86_64-apple-ios --release
               working-directory: /tmp/iphone/
