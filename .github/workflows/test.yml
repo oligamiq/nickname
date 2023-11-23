@@ -1,9 +1,0 @@
-on: []
-
-jobs:
-    build_cache_pc_tier1:
-        runs-on: macos-latest
-        steps:
-            - run: git clone https://github.com/michaelwu/RustKit
-              continue-on-error: true
-            - uses: lhotari/action-upterm@v1

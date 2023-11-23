@@ -17,4 +17,5 @@ cargo apk run
 ```
 <!-- cargo install xbuild -->
 cargo install cargo-apk
+cargo install dinghy
 ```
