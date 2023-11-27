@@ -15,8 +15,9 @@ https://github.com/WebAssembly/wasi-libc/issues/196
 - get
 
 ## iPhone
+- get
 
-## Windows, Linux, Mac
+## Windows, Linux, macOS
 - get
 - set
 
@@ -31,7 +32,7 @@ https://github.com/nziq53/nickname/tree/main/examples/common
 ## Android
 get nickname from bluetooth
 
-## Macos
+## macOS
 use native api
 
 # extension function
