@@ -21,6 +21,8 @@ https://github.com/WebAssembly/wasi-libc/issues/196
 - get
 - set
 
+! macOS is not stable because not using native api yet
+
 # Rust target
 https://doc.rust-lang.org/nightly/rustc/platform-support.html
 
