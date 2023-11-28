@@ -1,14 +1,12 @@
 // https://docs.rs/cacao/latest/src/cacao/filesystem/manager.rs.html#23
 
-use std::error::Error;
 use std::ffi::CStr;
 use std::fmt::{Debug, Formatter};
 use std::sync::{Arc, RwLock};
 
-use super::id;
-use objc::rc::Id;
-use objc::runtime::{AnyObject, NSObject, Object};
-use objc::{class, msg_send, msg_send_id, ClassType};
+use objc::{class, msg_send};
+
+use crate::iphone::util::id;
 
 #[repr(transparent)]
 #[derive(Clone)]

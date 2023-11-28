@@ -8,7 +8,9 @@ use winapi::shared::minwindef::DWORD;
 use winapi::shared::minwindef::MAKEWORD;
 use winapi::um::iptypes::MAX_HOSTNAME_LEN;
 use winapi::um::l2cmn::L2_PROFILE_MAX_NAME_LENGTH;
+#[cfg(not(miri))]
 use winapi::um::sysinfoapi::GetComputerNameExW;
+#[cfg(not(miri))]
 use winapi::um::sysinfoapi::{ComputerNamePhysicalDnsHostname, SetComputerNameExW};
 use winapi::um::winnt;
 pub struct NickName {}
@@ -83,16 +85,24 @@ impl NickName {
     /// DNS Host Name
     pub fn get_hostname(&self) -> crate::Result<String> {
         unsafe {
+            #[cfg_attr(miri, allow(unused_assignments))]
             let mut size: DWORD = 0;
 
             // DNS では長い名前が許可されるため、
             // サイズを取得する。
             // 必ず失敗する
+            #[cfg(not(miri))]
             let result = GetComputerNameExW(
                 ComputerNamePhysicalDnsHostname,
                 std::ptr::null_mut(),
                 &mut size,
             );
+            #[cfg(miri)]
+            let result = 0;
+            #[cfg(miri)]
+            {
+                size = 8;
+            }
             if result != 0 {
                 return Err(crate::Error::RuntimeError("unreachable".into()));
             }
@@ -103,12 +113,20 @@ impl NickName {
             buffer.set_len(size as usize);
 
             // GetComputerNameExWを呼び出してコンピュータ名を取得
-            if GetComputerNameExW(
+            #[cfg(not(miri))]
+            let ret = GetComputerNameExW(
                 ComputerNamePhysicalDnsHostname,
                 buffer.as_mut_ptr(),
                 &mut size,
-            ) != 0
+            );
+            #[cfg(miri)]
+            let ret = 1;
+            #[cfg(miri)]
             {
+                buffer = vec![104, 111, 115, 116, 110, 97, 109, 101];
+                size = 8;
+            }
+            if ret != 0 {
                 // Null終端のWCHARバッファをOsStringに変換
                 let os_string = OsString::from_wide(&buffer[..(size as usize)]);
 
@@ -205,17 +223,19 @@ impl NickName {
     pub fn set_hostname<S: Into<String>>(&self, nickname: S) -> crate::Result<()> {
         let nickname: String = nickname.into();
 
-        unsafe {
-            let mut buffer = OsStr::new(&nickname).encode_wide().collect::<Vec<_>>();
-            buffer.push(0);
+        let mut buffer = OsStr::new(&nickname).encode_wide().collect::<Vec<_>>();
+        buffer.push(0);
 
-            // SetComputerNameExWを呼び出してコンピュータ名を設定
-            if SetComputerNameExW(ComputerNamePhysicalDnsHostname, buffer.as_ptr()) != 0 {
-                Ok(())
-            } else {
-                Err(std::io::Error::last_os_error().into())
-            }
+        // SetComputerNameExWを呼び出してコンピュータ名を設定
+        #[cfg(not(miri))]
+        if unsafe { SetComputerNameExW(ComputerNamePhysicalDnsHostname, buffer.as_ptr()) } != 0 {
+            Ok(())
+        } else {
+            Err(std::io::Error::last_os_error().into())
         }
+
+        #[cfg(miri)]
+        Ok(())
     }
 
     /// computer name change only on windows reboot
