@@ -7,6 +7,7 @@ pub use self::jni::nick_name::NickName;
 use self::jni::global_ctx;
 use self::jni::global_jvm;
 
+// #[no_mangle]
 // extern "C" {
 //     fn android_get_device_api_level() -> i32;
 // }

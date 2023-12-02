@@ -5,21 +5,22 @@
         ".\\examples\\iphone\\Cargo.toml",
         ".\\examples\\common\\Cargo.toml"
     ],
-    // "rust-analyzer.cargo.target": "aarch64-linux-android",
-    "rust-analyzer.cargo.target": "x86_64-apple-ios",
+    "rust-analyzer.cargo.target": "aarch64-linux-android",
+    // "rust-analyzer.cargo.target": "x86_64-apple-ios",
     // "rust-analyzer.cargo.target": "x86_64-unknown-linux-gnu",
     // "rust-analyzer.cargo.target": "wasm32-wasi",
     "cSpell.words": [
-        "binstall",
-        "COMPUTERNAME",
-        "gethostname",
-        "libc",
-        "objc",
-        "sysinfoapi",
-        "thiserror",
-        "wasi",
-        "winapi",
-        "winbase"
+      "binstall",
+      "COMPUTERNAME",
+      "gethostname",
+      "jint",
+      "libc",
+      "objc",
+      "sysinfoapi",
+      "thiserror",
+      "wasi",
+      "winapi",
+      "winbase"
     ],
     "java.configuration.updateBuildConfiguration": "interactive"
 }

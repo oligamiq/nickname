@@ -1,8 +1,8 @@
 use jni::objects::{JClass, JObject, JValue};
 
-use std::fmt::{Debug, Formatter};
+use std::{fmt::{Debug, Formatter}, ptr::null};
 
-use super::{global_ctx, global_jvm};
+use super::{global_ctx, global_jvm, get_ctx_or_null_ptr};
 
 pub type Context = JObject<'static>;
 
@@ -23,7 +23,7 @@ impl NickName {
         let content_resolver: JObject = global_jvm()
             .get_env()?
             .call_method(
-                global_ctx(),
+                get_ctx_or_null_ptr(),
                 "getContentResolver",
                 "()Landroid/content/ContentResolver;",
                 &[],
