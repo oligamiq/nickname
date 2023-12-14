@@ -38,6 +38,9 @@ be able to `miri`
 ## iPhone
 be able to `miri`
 
+## linux
+be able to `miri` on set func
+
 # extension function
 ## Android
 - finish
@@ -58,4 +61,4 @@ check permission
 
 # can miri
 - windows
-- linux
+- linux(only get)
