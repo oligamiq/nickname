@@ -23,4 +23,12 @@ crate-type = ["cdylib"]
 [package.metadata.android.sdk]
 min_sdk_version = 24
 target_sdk_version = 32
+
+[[package.metadata.android.uses_permission]]
+name = "android.permission.BLUETOOTH"
+max_sdk_version = 30
+
+[[package.metadata.android.uses_permission]]
+name = "android.permission.BLUETOOTH_CONNECT"
+
 # https://github.com/rust-mobile/android-activity/issues/144

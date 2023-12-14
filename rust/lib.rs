@@ -34,6 +34,12 @@ pub enum Error {
     #[error("Permission denied")]
     PermissionDenied,
 
+    #[error("BluetoothAdapter is null. Maybe bluetooth feature is not supported")]
+    BluetoothAdapterNull,
+
+    #[error("API level is too low. Required API level is 5 or higher")]
+    ApiLevelTooLow,
+
     #[error("The operation is not supported: {}", _0)]
     NotSupported(String),
 
