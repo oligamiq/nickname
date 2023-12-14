@@ -65,8 +65,6 @@ jobs:
             - uses: cargo-bins/cargo-binstall@main
             - name: install rust android
               run: cargo binstall -q --no-confirm --force cargo-apk
-            - name: logcat
-              run: adb logcat RustStdoutStderr:D '*:S' > android-${{ matrix.api-level }}-run.log &
             - name: start android emulator
               uses: ReactiveCircus/android-emulator-runner@v2
               with:
@@ -75,7 +73,9 @@ jobs:
                   arch: x86_64
                   profile: pixel_2
                   emulator-boot-timeout: 900
-                  script: bash ../../workflow/android/run.sh
+                  script: |
+                      adb logcat RustStdoutStderr:D '*:S' > android-${{ matrix.api-level }}-run.log &
+                      bash ../../workflow/android/run.sh
                   working-directory: ./examples/android/
             - name: Upload log on cargo-apk
               uses: actions/upload-artifact@v3

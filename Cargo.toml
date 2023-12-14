@@ -1,6 +1,6 @@
 [package]
 name = "nick-name"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["oligami <nziq53@gmail.com>"]
 license = "MIT/Apache-2.0/BSD-3-Clause"
 repository = "https://github.com/nziq53/nickname"
@@ -9,8 +9,9 @@ edition = "2021"
 description = """
 A Cross-Platform Rust user define device-name(nick-name) get set library.
 """
-keywords = ["devicename", "nickname"]
+keywords = ["devicename", "nickname", "ffi", "utility"]
 categories = ["hardware-support"]
+readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -27,16 +28,53 @@ ndk-context = "0.1"
 
 [target.'cfg(target_os = "windows")'.dependencies]
 winapi = { version = "0.3", features = [
-    "winnt",
-    "winbase",
-    "l2cmn",
-    "sysinfoapi",
-    "winsock2",
-    "iptypes",
+  "winnt",
+  "winbase",
+  "l2cmn",
+  "sysinfoapi",
+  "winsock2",
+  "iptypes",
 ] }
 
 [target.'cfg(any(target_os = "ios", target_os = "macos"))'.dependencies]
-objc = { version = "0.4.1", package = "objc2" }
+objc = { version = "0.5.0", package = "objc2" }
 
 [target.'cfg(any(unix, target_os = "redox", target_os = "macos", target_os = "wasi"))'.dependencies]
 libc = "0.2"
+
+[package.metadata.docs.rs]
+default-target = "x86_64-pc-windows-msvc"
+targets = [
+  "x86_64-pc-windows-msvc",
+  "x86_64-pc-windows-gnu",
+  "i686-pc-windows-msvc",
+  "i686-pc-windows-gnu",
+  "x86_64-apple-darwin",
+  "x86_64-unknown-linux-gnu",
+  "i686-unknown-linux-gnu",
+  "aarch64-unknown-linux-gnu",
+  "aarch64-unknown-linux-musl",
+  "arm-unknown-linux-gnueabi",
+  "arm-unknown-linux-gnueabihf",
+  "armv7-unknown-linux-gnueabihf",
+  "powerpc-unknown-linux-gnu",
+  "powerpc64-unknown-linux-gnu",
+  "powerpc64le-unknown-linux-gnu",
+  "riscv64gc-unknown-linux-gnu",
+  "s390x-unknown-linux-gnu",
+  "x86_64-unknown-freebsd",
+  "x86_64-unknown-illumos",
+  "x86_64-unknown-linux-musl",
+  "x86_64-unknown-netbsd",
+  "loongarch64-unknown-linux-gnu",
+  "aarch64-apple-darwin",
+  "aarch64-pc-windows-msvc",
+  "aarch64-linux-android",
+  "arm-linux-androideabi",
+  "armv7-linux-androideabi",
+  "i686-linux-android",
+  "x86_64-linux-android",
+  "aarch64-apple-ios",
+  "x86_64-apple-ios",
+  "aarch64-apple-ios-sim",
+]

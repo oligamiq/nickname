@@ -23,13 +23,12 @@ pub fn get_device_api_level() -> crate::Result<i32> {
     Ok(0)
 }
 
+/// https://developer.android.com/reference/android/app/Activity#finishAndRemoveTask()
 pub fn finish() -> crate::Result<()> {
     let mut jni_env = global_jvm().get_env()?;
 
     if get_device_api_level()? < 21 {
-        return Err(crate::Error::NotSupported(
-            "finishAndRemoveTask is not supported".into(),
-        ));
+        return Err(crate::Error::ApiLevelTooLow);
     }
 
     jni_env.call_method(global_ctx(), "finishAndRemoveTask", "()V", &[])?;

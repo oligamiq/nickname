@@ -3,6 +3,7 @@
 use std::ffi::CStr;
 use std::fmt::Debug;
 use std::fmt::Formatter;
+#[cfg(not(miri))]
 use std::os::unix::ffi::OsStrExt;
 const _POSIX_HOST_NAME_MAX: libc::c_long = 255;
 
@@ -22,13 +23,21 @@ impl NickName {
     pub fn get(&self) -> crate::Result<String> {
         // ホスト名を格納するバッファのサイズを指定
         // https://pubs.opengroup.org/onlinepubs/9699919799/functions/gethostname.html
+        #[cfg(not(miri))]
         let limit = unsafe { libc::sysconf(libc::_SC_HOST_NAME_MAX) };
+        #[cfg(miri)]
+        let limit = 64;
+
         let size = libc::c_long::max(limit, _POSIX_HOST_NAME_MAX) as usize;
+        #[cfg_attr(miri, allow(unused_mut))]
         let mut hostname_buffer: Vec<u8> = vec![0; size + 1];
 
         // libcのgethostname関数を呼び出し、ホスト名を取得
+        #[cfg(not(miri))]
         let result =
             unsafe { libc::gethostname(hostname_buffer.as_mut_ptr() as *mut libc::c_char, size) };
+        #[cfg(miri)]
+        let result = 0;
 
         if result != 0 {
             return Err(std::io::Error::last_os_error().into());
@@ -43,6 +52,7 @@ impl NickName {
         }
     }
 
+    #[cfg(not(miri))]
     // https://github.com/svartalf/hostname/blob/master/src/nix.rs
     pub fn set<S: Into<String>>(&self, nickname: S) -> crate::Result<()> {
         let nickname: String = nickname.into();
@@ -105,5 +115,10 @@ impl NickName {
         } else {
             Ok(())
         }
+    }
+
+    #[cfg(miri)]
+    pub fn set<S: Into<String>>(&self, _nickname: S) -> crate::Result<()> {
+        Ok(())
     }
 }

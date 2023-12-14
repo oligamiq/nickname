@@ -2,6 +2,11 @@ on: [push, pull_request]
 
 jobs:
     dinghy:
+        strategy:
+            matrix:
+                os: [macos-latest]
+                version: [1.68.0, stable, beta, nightly]
+                prefix: [test_iphone]
         runs-on: macos-latest
         steps:
             - uses: actions/checkout@v3
@@ -15,8 +20,17 @@ jobs:
             # - name: install target
             #   run: rustup target add aarch64-apple-ios x86_64-apple-ios aarch64-apple-ios-sim
             - uses: cargo-bins/cargo-binstall@main
-            - name: install cargo-dinghy
-              run: cargo binstall -q --no-confirm --force cargo-dinghy
+            - name: install dinghy
+              run: |
+                  if [ ${{matrix.version}} == "1.68.0" ]; then
+                    if [ ${{matrix.os}} == "macos-latest" ]; then
+                      cargo binstall -q --no-confirm --force --pkg-url="https://github.com/sonos/dinghy/releases/download/0.6.5/cargo-dinghy-macos-0.6.5.tgz" cargo-dinghy@0.6.5
+                    else
+                      cargo binstall -q --no-confirm --force --pkg-url="https://github.com/sonos/dinghy/releases/download/0.6.5/cargo-dinghy-linux-0.6.5.tgz" cargo-dinghy@0.6.5
+                    fi
+                  else
+                     cargo binstall -q --no-confirm --force cargo-dinghy
+                  fi
             - name: start simulator
               uses: futureware-tech/simulator-action@v3
               with:
@@ -26,6 +40,11 @@ jobs:
               working-directory: ./examples/iphone/
 
     bundle:
+        strategy:
+            matrix:
+                os: [macos-latest]
+                version: [1.68.0, stable, beta, nightly]
+                prefix: [test_iphone]
         runs-on: macos-latest
         steps:
             - uses: actions/checkout@v3
@@ -54,7 +73,7 @@ jobs:
               uses: futureware-tech/simulator-action@v3
               # https://github.com/futureware-tech/simulator-action/wiki/Devices-macos-latest
               with:
-                  model: "iPhone 11"
+                  model: "iPhone 8"
                   shutdown_after_job: false
             - name: pre drive
               run: |
