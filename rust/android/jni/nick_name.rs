@@ -320,7 +320,7 @@ impl NickName {
                 "(Ljava/lang/String;Ljava/lang/String;)I",
                 &[
                     JValue::Object(&permission_str.into()),
-                    JValue::Object(&package_str.into()),
+                    JValue::Object(&package_str),
                 ],
             )
             // .expect("Failed to call checkSelfPermission method")
