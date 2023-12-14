@@ -378,7 +378,7 @@ impl NickName {
     /// * String deviceName = myDevice.getName();
     /// https://developer.android.com/reference/android/bluetooth/BluetoothAdapter#getDefaultAdapter()
     pub fn get_bluetooth_name_old(&self) -> crate::Result<String> {
-      if crate::get_device_api_level()? < 5 {
+        if crate::get_device_api_level()? < 5 {
             return Err(crate::Error::ApiLevelTooLow);
         }
 
@@ -417,7 +417,7 @@ impl NickName {
     /// * Android Emulator don't has bluetooth feature
     /// https://developer.android.com/reference/android/bluetooth/BluetoothManager#getAdapter()
     pub fn get_bluetooth_name_new(&self) -> crate::Result<String> {
-      if crate::get_device_api_level()? < 18 {
+        if crate::get_device_api_level()? < 18 {
             return Err(crate::Error::ApiLevelTooLow);
         }
 
