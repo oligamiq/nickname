@@ -3,7 +3,7 @@
 (Linux, FreeBSD, OpenBSD, NetBSD, Solaris, Redox, and so on)
 - Windows
 - Android
-- iPhone 
+- iPhone
 
 # cannot support platform yet
 - wasi
@@ -28,11 +28,15 @@ look README.md on example
 https://github.com/nziq53/nickname/tree/main/examples/common
 
 # next
-## Android
-get nickname from bluetooth
-
 ## Macos
 use native api
+be able to `miri`
+
+## Android
+be able to `miri`
+
+## iPhone
+be able to `miri`
 
 # extension function
 ## Android
@@ -41,9 +45,17 @@ call finishAndRemoveTask()
 - get_device_api_level
 get api_level
 call VERSION.SDK_INT
+- check_permission_old
+check permission
+- check_permission_new
+check permission
 
 # github actions test on mobile
 ## android
 - api-level 24: `error: "API level 25 or higher is required"`
 - api-level 30: `Android SDK built for x86_64`
 - api-level 33: `sdk_gphone_x86_64`
+
+# can miri
+- windows
+- linux
