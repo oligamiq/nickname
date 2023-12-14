@@ -15,10 +15,13 @@ https://github.com/WebAssembly/wasi-libc/issues/196
 - get
 
 ## iPhone
+- get
 
-## Windows, Linux, Mac
+## Windows, Linux, macOS
 - get
 - set
+
+! macOS is not stable because not using native api yet
 
 # Rust target
 https://doc.rust-lang.org/nightly/rustc/platform-support.html
@@ -28,7 +31,7 @@ look README.md on example
 https://github.com/nziq53/nickname/tree/main/examples/common
 
 # next
-## Macos
+## macOS
 use native api
 be able to `miri`
 
@@ -59,6 +62,6 @@ check permission
 - api-level 30: `Android SDK built for x86_64`
 - api-level 33: `sdk_gphone_x86_64`
 
-# can miri
+# miri support
 - windows
 - linux(only get)
