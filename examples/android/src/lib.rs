@@ -20,6 +20,18 @@ fn android_main(_app: AndroidApp) {
         println!("{:?}", device_name.get());
     };
 
+    if let Ok(device_name) = nick_name::NickName::new() {
+        println!("{:?}", device_name.get_bluetooth_name_old());
+    };
+
+    if let Ok(device_name) = nick_name::NickName::new() {
+        println!("{:?}", device_name.get_bluetooth_name_new());
+    };
+
+    if let Ok(device_name) = nick_name::NickName::new() {
+        println!("{:?}", device_name.get_sdk_official());
+    };
+
     nick_name::finish().unwrap();
 
     println!("__finish__");
