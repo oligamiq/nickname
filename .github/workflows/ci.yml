@@ -192,7 +192,7 @@ jobs:
                       cargo test --all --release --target $v -- --nocapture
                   }
 
-    build_target_tier2:
+    build_and_clippy_target_tier2:
         strategy:
             matrix:
                 os: [ubuntu-latest, macos-latest, windows-latest]
@@ -217,6 +217,8 @@ jobs:
                     rustup target add ${v}
                     cargo build --target ${v}
                     cargo build --target ${v} --release
+                    cargo clippy --target ${v} --all-targets --all-features -- -D warnings
+                    cargo clippy --target ${v} --all-targets --all-features --release -- -D warnings
                   done
             - name: build linux loongarch64
               if: matrix.os == 'ubuntu-latest' && matrix.version != '1.68.0'
@@ -224,6 +226,8 @@ jobs:
                   rustup target add loongarch64-unknown-linux-gnu
                   cargo build --target loongarch64-unknown-linux-gnu
                   cargo build --target loongarch64-unknown-linux-gnu --release
+                  cargo clippy --target loongarch64-unknown-linux-gnu --all-targets --all-features -- -D warnings
+                  cargo clippy --target loongarch64-unknown-linux-gnu --all-targets --all-features --release -- -D warnings
             - name: build macos
               if: matrix.os == 'macos-latest'
               run: |
@@ -232,6 +236,8 @@ jobs:
                     rustup target add ${v}
                     cargo build --target ${v}
                     cargo build --target ${v} --release
+                    cargo clippy --target ${v} --all-targets --all-features -- -D warnings
+                    cargo clippy --target ${v} --all-targets --all-features --release -- -D warnings
                   done
             - name: build windows
               if: matrix.os == 'windows-latest'
@@ -241,6 +247,8 @@ jobs:
                       rustup target add $v
                       cargo build --target ${v}
                       cargo build --target ${v} --release
+                      cargo clippy --target ${v} --all-targets --all-features -- -D warnings
+                      cargo clippy --target ${v} --all-targets --all-features --release -- -D warnings
                   }
 
     build_cache_android:
