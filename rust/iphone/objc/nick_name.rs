@@ -9,7 +9,6 @@ use objc::{class, msg_send};
 use crate::iphone::util::id;
 
 #[repr(transparent)]
-#[derive(Clone)]
 pub struct NickName(pub Arc<RwLock<id>>);
 
 impl Debug for NickName {
