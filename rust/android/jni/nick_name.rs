@@ -68,12 +68,14 @@ impl NickName {
     /// 5 <= API level <= 17
     /// * Require BLUETOOTH permission
     /// * Require BLUETOOTH_CONNECT permission
+    /// * Update is reboot required
     /// * Require bluetooth feature
     /// * Android Emulator don't has bluetooth feature
     ///
     /// 18 <= API level <= 24
     /// * Require BLUETOOTH permission
     /// * Require BLUETOOTH_CONNECT permission
+    /// * Update is reboot required
     /// * Require bluetooth feature
     /// * Android Emulator don't has bluetooth feature
     ///

@@ -11,6 +11,7 @@ static mut CONTEXT: Option<Context> = None;
 
 pub fn init(jvm: &'static JavaVM, ctx: Context) -> crate::Result<()> {
     let env = jvm.attach_current_thread().unwrap();
+    unsafe { JAVA_VM.replace(env.get_java_vm()?) };
     unsafe { JNI_ENV.replace(env) };
     unsafe { CONTEXT.replace(ctx) };
     Ok(())
