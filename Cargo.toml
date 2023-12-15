@@ -1,6 +1,6 @@
 [package]
 name = "nick-name"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["oligami <nziq53@gmail.com>"]
 license = "MIT/Apache-2.0/BSD-3-Clause"
 repository = "https://github.com/nziq53/nickname"
