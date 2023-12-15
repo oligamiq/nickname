@@ -136,6 +136,7 @@ If you ffi binding, you call init func.
 
 #### JavaVM
 If you call using JavaVM func first, have JavaVM attach.
+To attach JavaVM is heavy.
 You drop NickName and free JavaVM attach.
 
 # License
