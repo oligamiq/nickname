@@ -3,3 +3,6 @@
 
 target
 src/android/java/settings.gradle
+
+docs
+__docs
