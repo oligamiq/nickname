@@ -4,7 +4,7 @@ use std::ffi::CStr;
 use std::fmt::Debug;
 use std::fmt::Formatter;
 use std::os::unix::ffi::OsStrExt;
-use std::os::unix::process::CommandExt;
+// use std::os::unix::process::CommandExt;
 use std::sync::Arc;
 use std::sync::RwLock;
 

@@ -7,6 +7,7 @@ jobs:
                 os: [ubuntu-latest, macos-latest, windows-latest]
                 version: [1.68.0, stable, beta, nightly]
                 prefix: [pc_run]
+            fail-fast: false
         runs-on: ${{ matrix.os }}
         env:
             CARGO_REGISTRIES_CRATES_IO_PROTOCOL: sparse
@@ -30,8 +31,10 @@ jobs:
               run: |
                   cargo build --release
                   sudo target/release/pc > ${{ matrix.os }}-${{ matrix.version }}-release-run.log
+                  cat ${{ matrix.os }}-${{ matrix.version }}-release-run.log
                   cargo build
                   sudo target/debug/pc > ${{ matrix.os }}-${{ matrix.version }}-debug-run.log
+                  cat ${{ matrix.os }}-${{ matrix.version }}-debug-run.log
               working-directory: ./examples/common
             - name: Upload log release on run
               uses: actions/upload-artifact@v3
