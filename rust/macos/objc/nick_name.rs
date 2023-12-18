@@ -52,6 +52,7 @@ impl NickName {
             cmd.arg("--get").arg("ComputerName");
             let out = cmd.output().unwrap().stdout;
             let out = String::from_utf8(out).unwrap();
+            // out: Mac-1702909720453.local
             println!("out: {}", out);
 
             msg_send![class!(NSObject), alloc]
@@ -63,6 +64,7 @@ impl NickName {
 
         let name = self.get_name()?;
         println!("name: {}", name);
+        // name: Mac-1702909720453.local
 
         Ok(hostname)
     }
@@ -137,7 +139,17 @@ impl NickName {
 
     pub fn set<S: Into<String>>(&self, nickname: S) -> crate::Result<()> {
         let nickname: String = nickname.into();
-        self.set_hostname(nickname)?;
+        self.set_hostname(&nickname)?;
+
+        let name = self.get()?;
+        println!("set name: {}", name);
+
+        let mut cmd = std::process::Command::new("scutil");
+        cmd.arg("--set").arg("ComputerName").arg(nickname);
+        let out = cmd.output().unwrap().stdout;
+        let out = String::from_utf8(out).unwrap();
+        // out: Mac-1702909720453.local
+        println!("scutil set out: {}", out);
 
         let name = self.get()?;
         println!("set name: {}", name);
