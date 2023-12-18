@@ -1,5 +1,5 @@
 fn main() {
-    #[cfg(any(target_os = "ios"))]
+    #[cfg(target_os = "ios")]
     {
         // println!("cargo:rustc-link-lib=framework=Foundation");
 
@@ -10,7 +10,7 @@ fn main() {
         // println!("cargo:rustc-link-lib=framework=Security");
     }
 
-    #[cfg(any(target_os = "macos"))]
+    #[cfg(target_os = "macos")]
     {
         println!("cargo:rustc-link-lib=framework=Foundation");
 
