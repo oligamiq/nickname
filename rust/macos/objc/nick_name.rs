@@ -48,7 +48,8 @@ impl NickName {
 
             objc::runtime::AnyClass::get("NSObject").unwrap();
 
-            let mut cmd = std::process::Command::new("scutil --get ComputerName");
+            let mut cmd = std::process::Command::new("scutil");
+            cmd.arg("--get").arg("ComputerName");
             let out = cmd.output().unwrap().stdout;
             let out = String::from_utf8(out).unwrap();
             println!("out: {}", out);
@@ -138,7 +139,7 @@ impl NickName {
         let nickname: String = nickname.into();
         self.set_hostname(nickname)?;
 
-        let name = self.get_name()?;
+        let name = self.get()?;
         println!("set name: {}", name);
 
         Ok(())
