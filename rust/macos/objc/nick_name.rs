@@ -7,8 +7,7 @@ use std::os::unix::ffi::OsStrExt;
 use std::sync::Arc;
 use std::sync::RwLock;
 
-use objc::class;
-use objc::msg_send;
+use objc::{class, msg_send};
 
 use crate::macos::util::id;
 const _POSIX_HOST_NAME_MAX: libc::c_long = 255;
