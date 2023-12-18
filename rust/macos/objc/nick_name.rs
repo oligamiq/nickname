@@ -24,16 +24,18 @@ impl Debug for NickName {
     }
 }
 
+// https://github.com/servo/core-foundation-rs/blob/d4ce710182f1756c9d874ab917283fe1a1b7a011/cocoa/src/appkit.rs#L3890
 #[link(name = "AppKit", kind = "framework")]
 extern "C" {
-    static NSImageNameComputer: *const std::ffi::c_char;
+    // System image names (NSString const*)
+    pub static NSImageNameComputer: *mut objc::runtime::AnyObject;
 }
 
 impl NickName {
     pub fn new() -> crate::Result<Self> {
         preview_all_classes();
 
-        let name = unsafe { CStr::from_ptr(NSImageNameComputer.into()) };
+        let name = unsafe { CStr::from_ptr(NSImageNameComputer as *const i8) };
 
         println!("global name: {:?}", name.to_str());
 
