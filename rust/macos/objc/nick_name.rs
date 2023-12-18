@@ -24,18 +24,18 @@ impl Debug for NickName {
     }
 }
 
-// #[link(name = "AppKit", kind = "framework")]
-// extern "system" {
-//     static NSImageNameComputer: *const std::ffi::c_char;
-// }
+#[link(name = "AppKit", kind = "framework")]
+extern "C" {
+    static NSImageNameComputer: *const std::ffi::c_char;
+}
 
 impl NickName {
     pub fn new() -> crate::Result<Self> {
         preview_all_classes();
 
-        // let name = unsafe { CStr::from_ptr(NSImageNameComputer.into()) };
+        let name = unsafe { CStr::from_ptr(NSImageNameComputer.into()) };
 
-        // println!("global name: {}", name.to_str().unwrap());
+        println!("global name: {:?}", name.to_str());
 
         Ok(Self(Arc::new(RwLock::new(unsafe {
             // Create an instance of the UIDevice class
