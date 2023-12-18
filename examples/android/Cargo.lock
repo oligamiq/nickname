@@ -233,6 +233,7 @@ dependencies = [
  "jni",
  "libc",
  "ndk-context",
+ "objc-sys",
  "objc2",
  "thiserror",
  "winapi",
