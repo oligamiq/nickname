@@ -4,9 +4,16 @@ use std::ffi::CStr;
 use std::fmt::Debug;
 use std::fmt::Formatter;
 use std::os::unix::ffi::OsStrExt;
+use std::sync::Arc;
+use std::sync::RwLock;
+
+use objc::class;
+use objc::msg_send;
+
+use crate::macos::util::id;
 const _POSIX_HOST_NAME_MAX: libc::c_long = 255;
 
-pub struct NickName {}
+pub struct NickName(pub Arc<RwLock<id>>);
 
 impl Debug for NickName {
     fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
@@ -16,7 +23,12 @@ impl Debug for NickName {
 
 impl NickName {
     pub fn new() -> crate::Result<Self> {
-        Ok(Self {})
+        Ok(Self(Arc::new(RwLock::new(unsafe {
+            // Create an instance of the UIDevice class
+            let superclass = class!(NSApplication);
+
+            msg_send![class!(NSApplication), sharedApplication]
+        }))))
     }
 
     pub fn get(&self) -> crate::Result<String> {
