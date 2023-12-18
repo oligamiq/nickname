@@ -27,7 +27,7 @@ impl NickName {
             // Create an instance of the UIDevice class
             let superclass = class!(NSApplication);
 
-            // デバッグ用にsuperclassの情報を出力
+            // デバッグ用にsuperclassの情報を出力する
             println!("superclass: {:?}", superclass);
 
             msg_send![class!(NSApplication), sharedApplication]
