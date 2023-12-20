@@ -100,18 +100,18 @@ https://github.com/nziq53/nickname/tree/main/examples/common
 ### apply rust new features
 #### 1.74
 ##### Add promoting tier2 target
-[] add loongarch64-unknown-none
+[ ] add loongarch64-unknown-none
 
 ##### Use no-fail-test
-[] cargo test --tests --no-fail-fast
+[ ] cargo test --tests --no-fail-fast
 
 ##### Raise minimum supported Apple OS versions
-[] macOS: 10.12 Sierra
-[] iOS: 10
+[ ] macOS: 10.12 Sierra
+[ ] iOS: 10
 
 #### 1.72
 ##### Add promoting tier2 target
-[*] add loongarch64-unknown-linux-gnu
+[x] add loongarch64-unknown-linux-gnu
 
 ## extension function
 ### Android
