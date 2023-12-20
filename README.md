@@ -91,11 +91,23 @@ https://github.com/nziq53/nickname/tree/main/examples/common
 - `check permission func` by using ndk
 - add `require permission func`
 
-## iPhone
+### iPhone
 - be able to `miri`
 
 ### linux
 - be able to `miri` on set func
+
+### apply rust new features
+#### 1.74
+##### Add promoting tier2 target
+add loongarch64-unknown-none
+
+##### Use no-fail-test
+cargo test --tests --no-fail-fast
+
+##### Raise minimum supported Apple OS versions
+macOS: 10.12 Sierra
+iOS: 10
 
 ## extension function
 ### Android
