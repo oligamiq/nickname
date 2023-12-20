@@ -97,7 +97,7 @@ https://github.com/nziq53/nickname/tree/main/examples/common
 ### linux
 - be able to `miri` on set func
 
-### apply rust new features
+### apply rust new features ※≧MSVC(1.68.0)
 #### 1.74
 ##### Add promoting tier2 target
 - [ ] add loongarch64-unknown-none
