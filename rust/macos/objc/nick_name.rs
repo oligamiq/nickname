@@ -37,6 +37,13 @@ impl NickName {
 
         if NSImageNameComputer.is_null() {
           println!("NSImageNameComputer is null");
+        } else {
+          println!("NSImageNameComputer is not null");
+          // https://github.com/servo/core-foundation-rs/blob/d4ce710182f1756c9d874ab917283fe1a1b7a011/cocoa-foundation/src/foundation.rs#L632
+          let rust_string: *const libc::c_char = unsafe { msg_send![ns_string, UTF8String] };
+          let rust_string = unsafe { CStr::from_ptr(rust_string) };
+          let rust_string = rust_string.to_str().unwrap();
+          println!("rust_string: {}", rust_string);
         }
 
         println!("NSImageNameComputer: {:?}", NSImageNameComputer);
@@ -77,7 +84,7 @@ impl NickName {
         Ok(hostname)
     }
 
-    pub fn get_hostname(&self) -> crate::Result<String> {
+    pub fn get_by_gethostname(&self) -> crate::Result<String> {
         // ホスト名を格納するバッファのサイズを指定
         // https://pubs.opengroup.org/onlinepubs/9699919799/functions/gethostname.html
         let limit = unsafe { libc::sysconf(libc::_SC_HOST_NAME_MAX) };
@@ -101,7 +108,7 @@ impl NickName {
         }
     }
 
-    fn get_name(&self) -> crate::Result<String> {
+    fn get_by_sysctlbyname(&self) -> crate::Result<String> {
         let mut mib: [libc::c_int; 2] = [0, 0];
         let mut len: libc::size_t = 0;
 
