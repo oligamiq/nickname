@@ -35,7 +35,9 @@ impl NickName {
     pub fn new() -> crate::Result<Self> {
         preview_all_classes();
 
-        let name = unsafe { CStr::from_ptr(NSImageNameComputer as *const i8) };
+        println!("NSImageNameComputer: {:?}", NSImageNameComputer);
+
+        let name = unsafe { CStr::from_ptr(NSImageNameComputer) };
 
         println!("global name: {:?}", name.to_str());
 
