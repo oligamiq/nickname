@@ -35,6 +35,10 @@ impl NickName {
     pub fn new() -> crate::Result<Self> {
         preview_all_classes();
 
+        if NSImageNameComputer.is_null() {
+          println!("NSImageNameComputer is null");
+        }
+
         println!("NSImageNameComputer: {:?}", NSImageNameComputer);
 
         let name = unsafe { CStr::from_ptr(NSImageNameComputer) };
