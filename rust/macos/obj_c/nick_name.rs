@@ -16,7 +16,7 @@ use crate::macos::util::id;
 use super::preview_all_classes;
 const _POSIX_HOST_NAME_MAX: libc::c_long = 255;
 
-pub struct NickName(pub Arc<RwLock<id>>);
+pub struct NickName(pub(crate) Arc<RwLock<id>>);
 
 impl Debug for NickName {
     fn fmt(&self, f: &mut Formatter) -> std::fmt::Result {
@@ -33,53 +33,38 @@ extern "C" {
 
 impl NickName {
     pub fn new() -> crate::Result<Self> {
-        preview_all_classes();
-
-        if NSImageNameComputer.is_null() {
-          println!("NSImageNameComputer is null");
-        } else {
-          println!("NSImageNameComputer is not null");
-          // https://github.com/servo/core-foundation-rs/blob/d4ce710182f1756c9d874ab917283fe1a1b7a011/cocoa-foundation/src/foundation.rs#L632
-          let rust_string: *const libc::c_char = unsafe { msg_send![ns_string, UTF8String] };
-          let rust_string = unsafe { CStr::from_ptr(rust_string) };
-          let rust_string = rust_string.to_str().unwrap();
-          println!("rust_string: {}", rust_string);
-        }
-
-        println!("NSImageNameComputer: {:?}", NSImageNameComputer);
-
-        let name = unsafe { CStr::from_ptr(NSImageNameComputer) };
-
-        println!("global name: {:?}", name.to_str());
+        // preview_all_classes();
 
         Ok(Self(Arc::new(RwLock::new(unsafe {
-            // Create an instance of the UIDevice class
-            let superclass = class!(NSObject);
-            // デバッグ用にsuperclassの情報を出力する
-            println!("superclass: {:?}", superclass);
+            // // Create an instance of the UIDevice class
+            // let superclass = class!(NSObject);
+            // // デバッグ用にsuperclassの情報を出力する
+            // println!("superclass: {:?}", superclass);
 
-            // let panel = class!(NSWindow);
-            // println!("panel: {:?}", panel);
+            // // let panel = class!(NSWindow);
+            // // println!("panel: {:?}", panel);
 
-            objc::runtime::AnyClass::get("NSObject").unwrap();
+            // objc::runtime::AnyClass::get("NSObject").unwrap();
 
-            let mut cmd = std::process::Command::new("scutil");
-            cmd.arg("--get").arg("ComputerName");
-            let out = cmd.output().unwrap().stdout;
-            let out = String::from_utf8(out).unwrap();
-            // out: Mac-1702909720453.local
-            println!("out: {}", out);
+            // let mut cmd = std::process::Command::new("scutil");
+            // cmd.arg("--get").arg("ComputerName");
+            // let out = cmd.output().unwrap().stdout;
+            // let out = String::from_utf8(out).unwrap();
+            // // out: Mac-1702909720453.local
+            // println!("out: {}", out);
 
             msg_send![class!(NSObject), alloc]
         }))))
     }
 
     pub fn get(&self) -> crate::Result<String> {
-        let hostname = self.get_hostname()?;
+        // let hostname = self.get_by_gethostname()?;
 
-        let name = self.get_name()?;
-        println!("name: {}", name);
+        // let name = self.get_by_sysctlbyname()?;
+        // println!("name: {}", name);
         // name: Mac-1702909720453.local
+
+        let hostname = "default".into();
 
         Ok(hostname)
     }
@@ -108,7 +93,7 @@ impl NickName {
         }
     }
 
-    fn get_by_sysctlbyname(&self) -> crate::Result<String> {
+    pub fn get_by_sysctlbyname(&self) -> crate::Result<String> {
         let mut mib: [libc::c_int; 2] = [0, 0];
         let mut len: libc::size_t = 0;
 
@@ -129,17 +114,19 @@ impl NickName {
             return Err(std::io::Error::last_os_error().into());
         }
 
-        let mut hostname_buffer: Vec<u8> = vec![0; len + 1];
+        len += 1;
+
+        let mut hostname_buffer: Vec<u8> = vec![0; len];
 
         let result = unsafe {
             sysctlbyname(
-                "kern.hostname\0".as_ptr() as *const libc::c_char,
-                hostname_buffer.as_mut_ptr() as *mut libc::c_void,
-                &mut len,
-                std::ptr::null_mut(),
-                0,
+              "kern.hostname\0".as_ptr() as *const libc::c_char,
+              hostname_buffer.as_mut_ptr() as *mut libc::c_void,
+              &mut len,
+              std::ptr::null_mut(),
+              0,
             )
-        };
+          };
 
         if result != 0 {
             return Err(std::io::Error::last_os_error().into());
@@ -150,6 +137,23 @@ impl NickName {
         let hostname = hostname_cstr.to_str().unwrap();
 
         Ok(hostname.into())
+    }
+
+    #[allow(non_snake_case)]
+    /// Darling return "NSComputer"
+    pub fn get_by_NSImageNameComputer(&self) -> crate::Result<String> {
+        if unsafe { NSImageNameComputer }.is_null() {
+            Err(crate::Error::OsNotSupported(
+                "NSImageNameComputer is null".into(),
+            ))
+        } else {
+            // https://github.com/servo/core-foundation-rs/blob/d4ce710182f1756c9d874ab917283fe1a1b7a011/cocoa-foundation/src/foundation.rs#L632
+            let rust_string: *const libc::c_char =
+                unsafe { msg_send![NSImageNameComputer, UTF8String] };
+            let rust_string = unsafe { CStr::from_ptr(rust_string) };
+            let rust_string = rust_string.to_str().unwrap();
+            Ok(rust_string.into())
+        }
     }
 
     pub fn set<S: Into<String>>(&self, nickname: S) -> crate::Result<()> {

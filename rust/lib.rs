@@ -49,6 +49,9 @@ pub enum Error {
     #[error("Runtime Error: {}", _0)]
     RuntimeError(String),
 
+    #[error("OS not supported: {}", _0)]
+    OsNotSupported(String),
+
     #[error("{}", _0)]
     Other(Box<dyn std::error::Error + Send + Sync>),
 }

@@ -1,5 +1,5 @@
-mod objc;
-pub use self::objc::nick_name::NickName;
+mod obj_c;
+pub use self::obj_c::nick_name::NickName;
 
 mod util {
     use objc::runtime::NSObject;
