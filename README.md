@@ -70,6 +70,7 @@ https://github.com/WebAssembly/wasi-libc/issues/196
 - set
 
 ! Windows don't set %username% yet
+! Windows `set user` cmd
 
 ! macOS is not stable because not using native api yet
 
