@@ -29,7 +29,7 @@ Look at examples
 
 ## Support platforms
 - linux systems
-(Linux, FreeBSD, OpenBSD, NetBSD, Solaris, Redox, and so on)
+(Linux, macOS, FreeBSD, OpenBSD, NetBSD, Solaris, Redox, and so on)
 - Windows
 - Android
 - iPhone
